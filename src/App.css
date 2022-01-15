@@ -1,0 +1,17 @@
+.App {
+  text-align: center;
+  padding-top:50px;
+}
+
+.badge-container {
+  margin-top: 100px;
+}
+
+.page-title {
+  margin-bottom: 100px
+}
+
+.rainbow-text {
+  color: "linear(to-r, purple.500,blue.500)"
+}
+
