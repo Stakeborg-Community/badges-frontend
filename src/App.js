@@ -1,18 +1,26 @@
+import { ethers } from "ethers";
+import SeniorityBadge from "./utils/SeniorityBadge.json"
 import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from "react";
 
 import { Container, SimpleGrid, Box, Button, Text, Heading } from '@chakra-ui/react'
-import { NFT } from "@web3-ui/components";
+import { NFT } from "./components/NFT.tsx";
 
-const contractAddress = "0x25ed58c027921e14d86380ea2646e3a1b5c55a8b";
+const contractAddress = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
+const tokenIds = [0,1,2,3,4];
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState("");
+  const [collectionURIs, setCollectionURIs] = useState([])
 
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
+
+  useEffect(() => {
+    getCollectionURIs();
+  }, [])
 
   const checkIfWalletIsConnected = async () => {
     const {ethereum} = window;
@@ -31,6 +39,27 @@ function App() {
       const account = accounts[0];
       console.log("Found authorized account:", account);
       setCurrentAccount(account);
+    }
+  }
+
+  const getCollectionURIs = () => {
+    try {
+      tokenIds.forEach(async id => {
+        const url = "https://ipfs.io/ipfs/QmcY2t2RsQQMddHHvbdtyRxcdRBPtYjvdGLa9ymP9v7wdK/" + id + ".json";
+        fetch(url)
+          .then((res) => {
+            return res.json()
+          })
+          .then(body => {
+            collectionURIs[id] = body;
+          });
+      })
+
+  
+      setCollectionURIs(collectionURIs);
+
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -98,15 +127,29 @@ function App() {
     </Container>
     
   );
+
+  const nfts = [];
+
+  if (collectionURIs.length > 0) {
+    for (let i=0; i<collectionURIs.length; i++) {
+      nfts.push(<NFT tokenId={i}></NFT>);
+    }
+
+  } else {
+    console.log ("There are no NFTs");
+  }
   
   const renderBadgeContainer = () => (
+
+
     <Container maxW='container.xl' className="badge-container">
           <SimpleGrid minChildWidth='180px' spacing='40px'>
-            <NFT contractAddress={contractAddress} tokenId={2525}></NFT>
+            {/* <NFT contractAddress={contractAddress} tokenId={2525}></NFT>
             <NFT contractAddress={contractAddress} tokenId={5670}></NFT>
             <NFT contractAddress={contractAddress} tokenId={6546}></NFT>
             <NFT contractAddress={contractAddress} tokenId={7690}></NFT>
-            <NFT contractAddress={contractAddress} tokenId={3934}></NFT>
+            <NFT contractAddress={contractAddress} tokenId={3934}></NFT> */}
+            {nfts}
           </SimpleGrid>
     </Container>
   );
