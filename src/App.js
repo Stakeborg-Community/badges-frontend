@@ -4,8 +4,9 @@ import logo from './logo.svg';
 import './App.css';
 import { useState, useEffect } from "react";
 
-import { Container, SimpleGrid, Box, Button, Text, Heading } from '@chakra-ui/react'
+import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react'
 import { NFT } from "./components/NFT.tsx";
+import { Address } from "@web3-ui/components"
 
 const contractAddress = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const tokenIds = [0,1,2,3,4];
@@ -154,10 +155,20 @@ function App() {
     </Container>
   );
 
+  const renderAddressContainer = () => (
+    <Box alignItems='center' w='150px' p='10px' mr='30px' bg='tomato' color='white' borderRadius='lg' boxShadow='lg' bgGradient="linear(to-l, #3c4bbb, #00003b)" >
+        <Address value={currentAccount} shortened copiable></Address> 
+    </Box>
+  )
+
   return (
     <div className="App">
-      <Heading size="2xl" className="page-title rainbow-text"> Community Achievements </Heading>
-      <div>
+      <Flex>
+        <Spacer />
+        {currentAccount !== "" ? renderAddressContainer() : null}
+      </Flex>
+      <Heading  className='cirlce pulse' size="2xl" m='50px' color='#0e126e' > Community Achievements </Heading>
+      <div >
         {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
       </div>
      

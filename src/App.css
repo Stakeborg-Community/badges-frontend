@@ -11,7 +11,20 @@
   margin-bottom: 100px
 }
 
-.rainbow-text {
-  color: "linear(to-r, purple.500,blue.500)"
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+.grayscale {
+  filter: grayscale(80%);
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 100px rgba(219, 216, 12, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(219, 216, 12, 0);
+  }
 }
 

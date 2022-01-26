@@ -1,3 +1,4 @@
+import "./NFT.css";
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Box,
@@ -41,7 +42,7 @@ export const NFT = ({ tokenId, size = 'xs' }: NFTProps) => {
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/QmcY2t2RsQQMddHHvbdtyRxcdRBPtYjvdGLa9ymP9v7wdK/" + tokenId + ".json")
+      const res = await fetch("https://ipfs.io/ipfs/QmbjoafeN3Xr1bjeyP4xEKtr2CAWWXxekq1PCY3rKv3esA/" + tokenId + ".json");
           
       if (!res.ok) {
         throw Error(
@@ -105,23 +106,9 @@ export const NFTCard = ({
   }
 
   return (
-    <Skeleton isLoaded={!!data} maxW={size} h="md">
-      <Box maxW={size} borderRadius="lg" borderWidth="1px" overflow="hidden">
-        
-        <Image src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
-        
-        <Box p="6">
-          <Flex alignItems="center" justifyContent="space-between" pb="2">
-            <Heading as="h3" size="sm" style={{ overflowWrap: 'anywhere' }}>
-              {displayName}
-            </Heading>
-             <Tag size="sm">Badges</Tag>
-          </Flex>
-          <Text fontSize="xs">
-            {description} #{tokenId}
-          </Text>
-        </Box>
+      <Box maxW={size} borderRadiu='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow'>
+        <Image className="grayscale" src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
       </Box>
-    </Skeleton>
+
   );
 };
