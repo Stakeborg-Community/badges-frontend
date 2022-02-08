@@ -45,13 +45,14 @@ function App() {
 
 
   const setCardsOwnedStatus = async () => {
-    console.log("Contract instance: " + connectedContract);
+    console.log('Contract instance:');
+    console.log(connectedContract);
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
 
       try {
         const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log("Owned token %d: %d",id, balance.toString());
+        console.log(`Owned token ${id}: ${balance.toString()}`);
         if (balance.toString() !== "0") {
           cardOwnedStatus[id] = CARD_OWNED_STATUS.Owned;
         } 

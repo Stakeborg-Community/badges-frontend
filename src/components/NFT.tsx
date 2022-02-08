@@ -74,7 +74,7 @@ export const NFT = ({ tokenId, ownedStatus, size = 'xs'}: NFTProps) => {
   }, []);
 
   useEffect(() => {
-    console.log(`Update on token ${tokenId} triggered. Owned status changed to ${ownedStatus}`);
+    console.log(`Update on NFT ${tokenId} triggered. Owned status changed to ${ownedStatus}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
