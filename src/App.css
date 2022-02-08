@@ -11,7 +11,8 @@
   margin-bottom: 100px
 }
 
-.rainbow-text {
-  color: "linear(to-r, purple.500,blue.500)"
+.grayscale {
+  filter: grayscale(80%);
 }
+
 
