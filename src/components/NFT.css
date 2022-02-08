@@ -10,6 +10,6 @@
     filter: grayscale(80%);
 }
 
-.NON_MINTABLE:focus {
+.NON_MINTABLE:hover {
     filter: grayscale(20%);
 }

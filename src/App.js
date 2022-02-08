@@ -16,14 +16,14 @@ const CARD_OWNED_STATUS = {
   NonMintable: 'NON_MINTABLE'
 }
 
-const cardOwnedStatus = [];
+let cardOwnedStatus = [];
 
 /* Lesson learned the hard way: Change state variables only using their set function */
 
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState("");
-  const [connectedContract, setConnectedContract] = useState(null);
+  const [connectedContract, setConnectedContract] = useState();
 
   // Cards owned by the connected account
   const [ownedCards, setOwnedCards] = useState([]);
@@ -33,7 +33,7 @@ function App() {
   const [nonMintableCards, setNonMintableCards] = useState([]);
   
 
-  useEffect(() => {
+  useEffect( () => {
     checkIfWalletIsConnected();
   }, []);
 
@@ -45,13 +45,13 @@ function App() {
 
 
   const setCardsOwnedStatus = async () => {
-    console.log(connectedContract);
+    console.log("Contract instance: " + connectedContract);
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
 
       try {
         const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log(id, balance.toString());
+        console.log("Owned token %d: %d",id, balance.toString());
         if (balance.toString() !== "0") {
           cardOwnedStatus[id] = CARD_OWNED_STATUS.Owned;
         } 
@@ -104,10 +104,10 @@ function App() {
 
     for (let i=0; i<TOKEN_IDS.length; i++) {
       let id = TOKEN_IDS[i];
-      if (cardOwnedStatus[id]) {
-        ownedCardsArray.push(<NFT tokenId={id}></NFT>)
+      if (cardOwnedStatus[id] === CARD_OWNED_STATUS.Owned) {
+        ownedCardsArray.push(<NFT tokenId={id} ownedStatus={CARD_OWNED_STATUS.Owned}></NFT>)
       } else {
-        nonMintableCardsArray.push(<NFT tokenId={id}></NFT>)
+        nonMintableCardsArray.push(<NFT tokenId={id} ownedStatus={CARD_OWNED_STATUS.NonMintable}></NFT>)
       }
     }
   
@@ -188,6 +188,7 @@ function App() {
     <Container maxW='container.xl' className="badge-container">
           <SimpleGrid minChildWidth='180px' spacing='40px'>
             {ownedCards}
+            {mintableCards}
             {nonMintableCards}
           </SimpleGrid>
     </Container>
