@@ -107,7 +107,7 @@ export const NFTCard = ({
 
   return (
       <Box maxW={size} borderRadiu='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow'>
-        <Image className="grayscale" src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
+        <Image className="glow" src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
       </Box>
 
   );
