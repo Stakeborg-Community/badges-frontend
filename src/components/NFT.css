@@ -1,1 +1,15 @@
+.OWNED {
 
+}
+
+.MINTABLE {
+    filter: blur(5px)
+}
+
+.NON_MINTABLE {
+    filter: grayscale(80%);
+}
+
+.NON_MINTABLE:focus {
+    filter: grayscale(20%);
+}

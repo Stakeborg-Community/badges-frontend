@@ -22,6 +22,10 @@ export interface NFTProps {
    * The size of the NFT card.
    */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+   /**
+   * The status of the NFT ownership
+   */
+  ownedStatus: string;
 }
 
 export interface NFTData {
@@ -29,12 +33,13 @@ export interface NFTData {
   imageUrl?: string;
   name: string | null;
   description: string;
+  ownedStatus: string;
 }
 
 /**
  * Component to fetch and display NFT data
  */
-export const NFT = ({ tokenId, size = 'xs' }: NFTProps) => {
+export const NFT = ({ tokenId, size = 'xs', ownedStatus = 'NON_MINTABLE' }: NFTProps) => {
   const _isMounted = useRef(true);
   const [nftData, setNftData] = React.useState<NFTData>();
   const [errorMessage, setErrorMessage] = React.useState<string>();
@@ -56,6 +61,7 @@ export const NFT = ({ tokenId, size = 'xs' }: NFTProps) => {
           imageUrl: data.image,
           name: data.name,
           description: data.description,
+          ownedStatus: ownedStatus
         });
       }
     } catch (error) {
@@ -93,6 +99,7 @@ export const NFTCard = ({
   const name = data?.name;
   const imageUrl = data?.imageUrl;
   const description = data?.description;
+  const ownedStatus = data?.ownedStatus;
   const tokenId = data?.tokenId;
   const displayName = name;
 
@@ -105,9 +112,11 @@ export const NFTCard = ({
     );
   }
 
+  let imageClasses = `glow ${ownedStatus}`;
+
   return (
-      <Box maxW={size} borderRadiu='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow'>
-        <Image className="glow" src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
+      <Box maxW={size} borderRadius='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow' key={tokenId}>
+        <Image className={imageClasses}  src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
       </Box>
 
   );
