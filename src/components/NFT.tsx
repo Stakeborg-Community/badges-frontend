@@ -116,8 +116,8 @@ export const NFTCard = ({
   let imageClasses = `glow ${ownedStatus}`;
 
   return (
-      <Box maxW={size} borderRadius='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow' >
-        <a href="#"><Image className={imageClasses}  src={imageUrl} alt={displayName} borderRadius="lg" w={size} key={tokenId}/></a>
+      <Box key={tokenId} maxW={size} borderRadius='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow' >
+        <a href="#"><Image className={imageClasses}  src={imageUrl} alt={displayName} borderRadius="lg" w={size} /></a>
       </Box>
 
   );
