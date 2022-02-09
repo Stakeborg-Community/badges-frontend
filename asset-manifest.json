@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/badges-frontend/static/css/main.aaf3fd12.css",
-    "main.js": "/badges-frontend/static/js/main.3ccf84d8.js",
+    "main.css": "/badges-frontend/static/css/main.d7dae427.css",
+    "main.js": "/badges-frontend/static/js/main.39abcd56.js",
     "static/js/787.481f47c2.chunk.js": "/badges-frontend/static/js/787.481f47c2.chunk.js",
-    "static/media/logo.svg": "/badges-frontend/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/badges-frontend/index.html",
-    "main.aaf3fd12.css.map": "/badges-frontend/static/css/main.aaf3fd12.css.map",
-    "main.3ccf84d8.js.map": "/badges-frontend/static/js/main.3ccf84d8.js.map",
+    "main.d7dae427.css.map": "/badges-frontend/static/css/main.d7dae427.css.map",
+    "main.39abcd56.js.map": "/badges-frontend/static/js/main.39abcd56.js.map",
     "787.481f47c2.chunk.js.map": "/badges-frontend/static/js/787.481f47c2.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.aaf3fd12.css",
-    "static/js/main.3ccf84d8.js"
+    "static/css/main.d7dae427.css",
+    "static/js/main.39abcd56.js"
   ]
 }
