@@ -15,14 +15,13 @@ const CARD_OWNED_STATUS = {
   Mintable: 'MINTABLE',
   NonMintable: 'NON_MINTABLE'
 }
-let cardOwnedStatus = {}
-
 
 /* Lesson learned the hard way: Change state variables only using their set function */
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState("");
   const [connectedContract, setConnectedContract] = useState(null);
+  const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
 
   // Cards owned by the connected account
   const [ownedCards, setOwnedCards] = useState([]);
@@ -36,11 +35,12 @@ function App() {
     checkIfWalletIsConnected();
   }, []);
 
-  useEffect(async () => {
+  useEffect(() => {
     
-    const setCardsOwnedStatus = async () => {
+    const getCardsOwned = async () => {
       console.log('Contract instance:');
       console.log(connectedContract);
+      let ownedstatus = {};
       for (let i=0; i<TOKEN_IDS.length; i++) {
         const id = TOKEN_IDS[i];
   
@@ -48,21 +48,28 @@ function App() {
           const balance = await connectedContract.balanceOf(currentAccount, id)
           console.log(`Owned token ${id}: ${balance.toString()}`);
           if (balance.toString() !== "0") {
-            cardOwnedStatus[id] = CARD_OWNED_STATUS.Owned;
+            ownedstatus[id] = CARD_OWNED_STATUS.Owned;
           } 
           else {
-            cardOwnedStatus[id] = CARD_OWNED_STATUS.NonMintable;
+            ownedstatus[id] = CARD_OWNED_STATUS.NonMintable;
           }
         
         } catch (error) {
           console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
           return;
         }
-      }
-      
-    }
+      }  
+      setCardsOwnedStatus(ownedstatus);    
+    }   
 
-    const createNFTArrays = () => {
+    // These functions get called only after connectedContract state var gets updated
+    if (connectedContract !== null) {
+      getCardsOwned();
+    }
+  }, [connectedContract])
+
+  useEffect( () => {
+    const updateNFTArrays = () => {
       let ownedCardsArray = [];
       let nonMintableCardsArray = [];
       
@@ -71,26 +78,22 @@ function App() {
   
       for (let i=0; i<TOKEN_IDS.length; i++) {
         let id = TOKEN_IDS[i];
-        if (cardOwnedStatus[id] === CARD_OWNED_STATUS.Owned) {
-          ownedCardsArray.push(<NFT tokenId={id} ownedStatus={CARD_OWNED_STATUS.Owned}></NFT>)
+        if (cardsOwnedStatus[id] === CARD_OWNED_STATUS.Owned) {
+          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={CARD_OWNED_STATUS.Owned}></NFT>)
         } else {
-          nonMintableCardsArray.push(<NFT tokenId={id} ownedStatus={CARD_OWNED_STATUS.NonMintable}></NFT>)
+          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={CARD_OWNED_STATUS.NonMintable}></NFT>)
         }
       }
-    
+      console.log("Create nft arrays");
+      console.log(ownedCardsArray);
       setOwnedCards(ownedCardsArray);
       setNonMintableCards(nonMintableCardsArray);
     }
 
-    // These functions get called only after connectedContract state var gets updated
-    if (connectedContract !== null)
-    { 
-      await setCardsOwnedStatus();
-      createNFTArrays();
+    if (cardsOwnedStatus !== null) {
+      updateNFTArrays();
     }
-  }, [connectedContract])
-
-  
+  }, [cardsOwnedStatus]);  
 
 
   const checkIfWalletIsConnected = async () => {
