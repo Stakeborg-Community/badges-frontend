@@ -25,7 +25,7 @@ export interface NFTProps {
    /**
    * The status of the NFT ownership
    */
-  ownedStatus: string;
+  ownedStatus: Symbol;
 }
 
 export interface NFTData {
@@ -33,7 +33,7 @@ export interface NFTData {
   imageUrl?: string;
   name: string | null;
   description: string;
-  ownedStatus: string;
+  ownedStatus: Symbol;
 }
 
 /**
@@ -74,7 +74,7 @@ export const NFT = ({ tokenId, ownedStatus, size = 'xs'}: NFTProps) => {
   }, []);
 
   useEffect(() => {
-    console.log(`Update on NFT ${tokenId} triggered. Owned status changed to ${ownedStatus}`);
+    console.log(`Update on NFT ${tokenId} triggered. Owned status changed to ${ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
@@ -113,10 +113,10 @@ export const NFTCard = ({
     );
   }
 
-  let imageClasses = `glow ${ownedStatus}`;
+  let imageClasses = ownedStatus?.description;
 
   return (
-      <Box maxW={size} borderRadius='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow' >
+      <Box maxW={size} borderRadius='lg' overflow="hidden" boxShadow='0px 0px 0px yellow' >
         <a href="#"><Image className={imageClasses}  src={imageUrl} alt={displayName} borderRadius="lg" w={size} /></a>
       </Box>
 

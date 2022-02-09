@@ -1,20 +1,15 @@
 import { ethers } from "ethers";
-import SeniorityBadge from "./utils/SeniorityBadge.json"
+import SeniorityBadge from "./utils/SeniorityBadge.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
-import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react'
+import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
-import { Address } from "@web3-ui/components"
+import { Address } from "@web3-ui/components";
+import {Owned, Mintable, NonMintable} from "./components/NFTOwnershipStatus";
 
 const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const TOKEN_IDS = [0,1,2,3,4];
-
-const CARD_OWNED_STATUS = {
-  Owned: 'OWNED',
-  Mintable: 'MINTABLE',
-  NonMintable: 'NON_MINTABLE'
-}
 
 /* Lesson learned the hard way: Change state variables only using their set function */
 
@@ -48,10 +43,10 @@ function App() {
           const balance = await connectedContract.balanceOf(currentAccount, id)
           console.log(`Owned token ${id}: ${balance.toString()}`);
           if (balance.toString() !== "0") {
-            ownedstatus[id] = CARD_OWNED_STATUS.Owned;
+            ownedstatus[id] = Owned;
           } 
           else {
-            ownedstatus[id] = CARD_OWNED_STATUS.NonMintable;
+            ownedstatus[id] = NonMintable;
           }
         
         } catch (error) {
@@ -78,10 +73,10 @@ function App() {
   
       for (let i=0; i<TOKEN_IDS.length; i++) {
         let id = TOKEN_IDS[i];
-        if (cardsOwnedStatus[id] === CARD_OWNED_STATUS.Owned) {
-          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={CARD_OWNED_STATUS.Owned}></NFT>)
+        if (cardsOwnedStatus[id] === Owned) {
+          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={Owned}></NFT>)
         } else {
-          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={CARD_OWNED_STATUS.NonMintable}></NFT>)
+          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NonMintable}></NFT>)
         }
       }
       console.log("Create nft arrays");
