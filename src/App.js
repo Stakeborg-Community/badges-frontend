@@ -1,29 +1,22 @@
 import { ethers } from "ethers";
-import SeniorityBadge from "./utils/SeniorityBadge.json"
+import SeniorityBadge from "./utils/SeniorityBadge.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
-import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react'
+import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
-import { Address } from "@web3-ui/components"
+import { Address } from "@web3-ui/components";
+import {Owned, Mintable, NonMintable} from "./components/NFTOwnershipStatus";
 
 const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const TOKEN_IDS = [0,1,2,3,4];
 
-const CARD_OWNED_STATUS = {
-  Owned: 'OWNED',
-  Mintable: 'MINTABLE',
-  NonMintable: 'NON_MINTABLE'
-}
-
-const cardOwnedStatus = [];
-
 /* Lesson learned the hard way: Change state variables only using their set function */
-
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState("");
   const [connectedContract, setConnectedContract] = useState(null);
+  const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
 
   // Cards owned by the connected account
   const [ownedCards, setOwnedCards] = useState([]);
@@ -33,39 +26,69 @@ function App() {
   const [nonMintableCards, setNonMintableCards] = useState([]);
   
 
-  useEffect(() => {
+  useEffect( () => {
     checkIfWalletIsConnected();
   }, []);
 
   useEffect(() => {
+    
+    const getCardsOwned = async () => {
+      console.log('Contract instance:');
+      console.log(connectedContract);
+      let ownedstatus = {};
+      for (let i=0; i<TOKEN_IDS.length; i++) {
+        const id = TOKEN_IDS[i];
+  
+        try {
+          const balance = await connectedContract.balanceOf(currentAccount, id)
+          console.log(`Owned token ${id}: ${balance.toString()}`);
+          if (balance.toString() !== "0") {
+            ownedstatus[id] = Owned;
+          } 
+          else {
+            ownedstatus[id] = NonMintable;
+          }
+        
+        } catch (error) {
+          console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
+          return;
+        }
+      }  
+      setCardsOwnedStatus(ownedstatus);    
+    }   
+
     // These functions get called only after connectedContract state var gets updated
-    setCardsOwnedStatus();
-    createNFTArrays();
+    if (connectedContract !== null) {
+      getCardsOwned();
+    }
   }, [connectedContract])
 
-
-  const setCardsOwnedStatus = async () => {
-    console.log(connectedContract);
-    for (let i=0; i<TOKEN_IDS.length; i++) {
-      const id = TOKEN_IDS[i];
-
-      try {
-        const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log(id, balance.toString());
-        if (balance.toString() !== "0") {
-          cardOwnedStatus[id] = CARD_OWNED_STATUS.Owned;
-        } 
-        else {
-          cardOwnedStatus[id] = CARD_OWNED_STATUS.NonMintable;
-        }
+  useEffect( () => {
+    const updateNFTArrays = () => {
+      let ownedCardsArray = [];
+      let nonMintableCardsArray = [];
       
-      } catch (error) {
-        console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
-        return;
+      // TODO: Create the mintable cards array once whitelisting check is implemented
+      let mintableCardsArray = [];
+  
+      for (let i=0; i<TOKEN_IDS.length; i++) {
+        let id = TOKEN_IDS[i];
+        if (cardsOwnedStatus[id] === Owned) {
+          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={Owned}></NFT>)
+        } else {
+          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NonMintable}></NFT>)
+        }
       }
+      console.log("Create nft arrays");
+      console.log(ownedCardsArray);
+      setOwnedCards(ownedCardsArray);
+      setNonMintableCards(nonMintableCardsArray);
     }
-    
-  }
+
+    if (cardsOwnedStatus !== null) {
+      updateNFTArrays();
+    }
+  }, [cardsOwnedStatus]);  
 
 
   const checkIfWalletIsConnected = async () => {
@@ -95,25 +118,7 @@ function App() {
     setConnectedContract(contract);
   }
  
-  const createNFTArrays = () => {
-    let ownedCardsArray = [];
-    let nonMintableCardsArray = [];
-    
-    // TODO: Create the mintable cards array once whitelisting check is implemented
-    let mintableCardsArray = [];
-
-    for (let i=0; i<TOKEN_IDS.length; i++) {
-      let id = TOKEN_IDS[i];
-      if (cardOwnedStatus[id]) {
-        ownedCardsArray.push(<NFT tokenId={id}></NFT>)
-      } else {
-        nonMintableCardsArray.push(<NFT tokenId={id}></NFT>)
-      }
-    }
   
-    setOwnedCards(ownedCardsArray);
-    setNonMintableCards(nonMintableCardsArray);
-  }
 
 
   const connectWallet = async () => {
@@ -188,6 +193,7 @@ function App() {
     <Container maxW='container.xl' className="badge-container">
           <SimpleGrid minChildWidth='180px' spacing='40px'>
             {ownedCards}
+            {mintableCards}
             {nonMintableCards}
           </SimpleGrid>
     </Container>

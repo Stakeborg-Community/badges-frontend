@@ -22,6 +22,10 @@ export interface NFTProps {
    * The size of the NFT card.
    */
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+   /**
+   * The status of the NFT ownership
+   */
+  ownedStatus: Symbol;
 }
 
 export interface NFTData {
@@ -29,12 +33,13 @@ export interface NFTData {
   imageUrl?: string;
   name: string | null;
   description: string;
+  ownedStatus: Symbol;
 }
 
 /**
  * Component to fetch and display NFT data
  */
-export const NFT = ({ tokenId, size = 'xs' }: NFTProps) => {
+export const NFT = ({ tokenId, ownedStatus, size = 'xs'}: NFTProps) => {
   const _isMounted = useRef(true);
   const [nftData, setNftData] = React.useState<NFTData>();
   const [errorMessage, setErrorMessage] = React.useState<string>();
@@ -56,6 +61,7 @@ export const NFT = ({ tokenId, size = 'xs' }: NFTProps) => {
           imageUrl: data.image,
           name: data.name,
           description: data.description,
+          ownedStatus: ownedStatus
         });
       }
     } catch (error) {
@@ -65,15 +71,16 @@ export const NFT = ({ tokenId, size = 'xs' }: NFTProps) => {
         setErrorMessage('An unknown error occurred');
       }
     }
-  }, [tokenId]);
+  }, []);
 
   useEffect(() => {
+    console.log(`Update on NFT ${tokenId} triggered. Owned status changed to ${ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
       _isMounted.current = false;
     };
-  }, [tokenId]);
+  }, [ownedStatus]);
 
   return <NFTCard data={nftData} errorMessage={errorMessage} size={size} />;
 };
@@ -93,6 +100,7 @@ export const NFTCard = ({
   const name = data?.name;
   const imageUrl = data?.imageUrl;
   const description = data?.description;
+  const ownedStatus = data?.ownedStatus;
   const tokenId = data?.tokenId;
   const displayName = name;
 
@@ -105,9 +113,11 @@ export const NFTCard = ({
     );
   }
 
+  let imageClasses = ownedStatus?.description;
+
   return (
-      <Box maxW={size} borderRadiu='lg' overflow="hidden"  className="pulse" boxShadow='0px 0px 0px yellow'>
-        <Image className="glow" src={imageUrl} alt={displayName} borderRadius="lg" w={size} />
+      <Box maxW={size} borderRadius='lg' overflow="hidden" boxShadow='0px 0px 0px yellow' >
+        <a href="#"><Image className={imageClasses}  src={imageUrl} alt={displayName} borderRadius="lg" w={size} /></a>
       </Box>
 
   );

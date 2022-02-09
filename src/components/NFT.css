@@ -1,1 +1,25 @@
+.OWNED {
+    
+}
 
+.OWNED:hover {
+
+}
+
+.NON_MINTABLE {
+    filter: grayscale(90%);
+}
+
+.NON_MINTABLE:hover {
+    filter: grayscale(40%);
+}
+
+
+
+.MINTABLE {
+    filter: grayscale(40%) blur(3px);
+}
+
+.MINTABLE:hover {
+    filter: none
+}
