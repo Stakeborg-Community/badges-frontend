@@ -154,7 +154,7 @@ function App() {
               {
                 chainId: "0x13881",
                 chainName: "Mumbai",
-                rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+                rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
                 nativeCurrency: {
                   name: "Matic",
                   symbol: "Matic",
