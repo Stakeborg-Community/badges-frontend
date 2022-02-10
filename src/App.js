@@ -14,10 +14,14 @@ const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 const TOKEN_IDS = [0,1,2,3,4];
 
-/* Lesson learned the hard way: Change state variables only using their set function */
+console.log("Merkle root for all tokens:");
+for (let i=0; i<TOKEN_IDS.length; i++)
+{
+  console.log(Merkle.getRoot(TOKEN_IDS[i]));
+}
 
 function App() {
-
+/* Lesson learned the hard way: Change state variables only using their set function */
   const [currentAccount, setCurrentAccount] = useState("");
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
@@ -29,8 +33,18 @@ function App() {
   // Cards which cannot be minted yet
   const [nonMintableCards, setNonMintableCards] = useState([]);
 
-  const mint = (tokenId) => {
-    console.log("trying to mint: ", tokenId);
+  const mint = async (tokenId) => {
+    console.log("trying to mint: ", tokenId); 
+    checkIfWalletIsConnected();
+
+    try {
+      const proof = Merkle.getProof(currentAccount, tokenId);
+      const result = await connectedContract.mintBootstrapper(proof);
+      console.log(result);
+    } catch (error) {
+      console.error(`Failed to get mint token ${tokenId} for address ${currentAccount}`);
+      return;
+    }
   }
 
   useEffect( () => {
@@ -95,9 +109,6 @@ function App() {
     if (cardsOwnedStatus !== null) {
       updateNFTArrays();
     }
-
-    console.log("MERKLE PROOF for 0", Merkle.getProof("0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7", 0));
-    console.log("Merkle root for 0", Merkle.getRoot(0));
   }, [cardsOwnedStatus]);  
 
 
