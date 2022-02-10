@@ -2,13 +2,7 @@ import "./NFT.css";
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Box,
-  Heading,
   Image,
-  Flex,
-  Tag,
-  Text,
-  VStack,
-  Skeleton,
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';

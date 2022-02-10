@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import SeniorityBadge from "./utils/SeniorityBadge.json";
+import SeniorityBadgev2 from "./utils/SeniorityBadge-v2.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
@@ -9,6 +10,7 @@ import { Address } from "@web3-ui/components";
 import {Owned, Mintable, NonMintable} from "./components/NFTOwnershipStatus";
 
 const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
+const CONTRACT_ADDRESS_V2 = "0x32EDBbD30CA85B77446a9f264Dcd70C7C0007cb4";
 const TOKEN_IDS = [0,1,2,3,4];
 
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -114,7 +116,7 @@ function App() {
     // Connect to contract
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, SeniorityBadge.abi, signer);
+    const contract = new ethers.Contract(CONTRACT_ADDRESS_V2, SeniorityBadgev2.abi, signer);
     setConnectedContract(contract);
   }
  
@@ -191,7 +193,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='180px' spacing='40px'>
+          <SimpleGrid minChildWidth='150px' spacing='30px'>
             {ownedCards}
             {mintableCards}
             {nonMintableCards}
@@ -200,7 +202,7 @@ function App() {
   );
 
   const renderAddressContainer = () => (
-    <Box alignItems='center' w='150px' p='10px' mr='30px' bg='tomato' color='white' borderRadius='lg' boxShadow='lg' bgGradient="linear(to-l, #3c4bbb, #00003b)" >
+    <Box alignItems='center' w='200px' p='10px' mr='30px' bg='tomato' color='white' borderRadius='lg' boxShadow='lg' bgGradient="linear(to-l, #3c4bbb, #00003b)" >
         <Address value={currentAccount} shortened copiable></Address> 
     </Box>
   )
