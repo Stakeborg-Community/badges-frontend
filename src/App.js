@@ -10,7 +10,7 @@ import { Address } from "@web3-ui/components";
 import {Owned, Mintable, NonMintable} from "./components/NFTOwnershipStatus";
 
 const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
-const CONTRACT_ADDRESS_V2 = "0x32EDBbD30CA85B77446a9f264Dcd70C7C0007cb4";
+const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 const TOKEN_IDS = [0,1,2,3,4];
 
 /* Lesson learned the hard way: Change state variables only using their set function */
