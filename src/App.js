@@ -7,8 +7,8 @@ import { useState, useEffect } from "react";
 import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
-import {Owned, Mintable, NonMintable} from "./components/NFTOwnershipStatus";
-import getProof from "./whitelisting/merkletree.js";
+import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
+import * as Merkle from "./whitelisting/merkletree.js";
 
 const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
@@ -17,7 +17,6 @@ const TOKEN_IDS = [0,1,2,3,4];
 /* Lesson learned the hard way: Change state variables only using their set function */
 
 function App() {
-  console.log("MERKLE PROOF", getProof("0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7", 0));
 
   const [currentAccount, setCurrentAccount] = useState("");
   const [connectedContract, setConnectedContract] = useState(null);
@@ -29,6 +28,10 @@ function App() {
   const [mintableCards, setMintableCards] = useState([]);
   // Cards which cannot be minted yet
   const [nonMintableCards, setNonMintableCards] = useState([]);
+
+  const mint = (tokenId) => {
+    console.log("trying to mint: ", tokenId);
+  }
 
   useEffect( () => {
     checkIfWalletIsConnected();
@@ -47,10 +50,10 @@ function App() {
           const balance = await connectedContract.balanceOf(currentAccount, id)
           console.log(`Owned token ${id}: ${balance.toString()}`);
           if (balance.toString() !== "0") {
-            ownedstatus[id] = Owned;
+            ownedstatus[id] = NFTOwnershipStatus.Owned;
           } 
           else {
-            ownedstatus[id] = NonMintable;
+            ownedstatus[id] = NFTOwnershipStatus.NonMintable;
           }
         
         } catch (error) {
@@ -77,10 +80,10 @@ function App() {
   
       for (let i=0; i<TOKEN_IDS.length; i++) {
         let id = TOKEN_IDS[i];
-        if (cardsOwnedStatus[id] === Owned) {
-          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={Owned}></NFT>)
+        if (cardsOwnedStatus[id] === NFTOwnershipStatus.Owned) {
+          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NFTOwnershipStatus.Owned} mintingFn={mint}></NFT>)
         } else {
-          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NonMintable}></NFT>)
+          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NFTOwnershipStatus.NonMintable} mintingFn={mint}></NFT>)
         }
       }
       console.log("Create nft arrays");
@@ -92,6 +95,9 @@ function App() {
     if (cardsOwnedStatus !== null) {
       updateNFTArrays();
     }
+
+    console.log("MERKLE PROOF for 0", Merkle.getProof("0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7", 0));
+    console.log("Merkle root for 0", Merkle.getRoot(0));
   }, [cardsOwnedStatus]);  
 
 
