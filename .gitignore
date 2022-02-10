@@ -24,3 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .vscode
+package-lock.json
+wp/composer.lock
