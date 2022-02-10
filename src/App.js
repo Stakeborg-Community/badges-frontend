@@ -8,6 +8,7 @@ import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from 
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import {Owned, Mintable, NonMintable} from "./components/NFTOwnershipStatus";
+import getProof from "./whitelisting/merkletree.js";
 
 const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
@@ -16,6 +17,8 @@ const TOKEN_IDS = [0,1,2,3,4];
 /* Lesson learned the hard way: Change state variables only using their set function */
 
 function App() {
+  console.log("MERKLE PROOF", getProof("0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7", 0));
+
   const [currentAccount, setCurrentAccount] = useState("");
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
@@ -26,7 +29,6 @@ function App() {
   const [mintableCards, setMintableCards] = useState([]);
   // Cards which cannot be minted yet
   const [nonMintableCards, setNonMintableCards] = useState([]);
-  
 
   useEffect( () => {
     checkIfWalletIsConnected();
