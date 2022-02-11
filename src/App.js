@@ -10,7 +10,7 @@ import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
 import Merkle from "./whitelisting/merkletree.js";
 
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
-const TOKEN_IDS = [0,1,2,3,4];
+const TOKEN_IDS = [0,1,2,3,4,69420, 69420, 69420, 69420, 69420];
 
 
 function App() {
@@ -244,7 +244,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='150px' spacing='30px'>
+          <SimpleGrid minChildWidth='220px' spacing='30px'>
             {ownedCards}
             {mintableCards}
             {nonMintableCards}

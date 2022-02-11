@@ -138,15 +138,15 @@ export const NFTCard = ({
 
   let imageClasses = ownedStatus?.description;
   let button;
-  if (ownedStatus !== NFTOwnershipStatus.Owned)
+  if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
   {
-    button = <Button color='white' boxShadow='lg' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
+    button = <Button color='white' boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
               Mint
             </Button>;
   }
 
   return (
-      <Box maxW={size} p='3' borderRadius='lg' overflow="hidden"  boxShadow='0px 0px 0px yellow' >
+      <Box maxW={size} p='3' borderRadius='lg' overflow="hidden">
         
         <a href="#">
           <Image className={imageClasses}  src={data?.image_lgUrl} borderRadius="lg" w={size} loading="lazy" />

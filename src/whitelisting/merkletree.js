@@ -36,7 +36,7 @@ export default class Merkle {
     }
 
     tokenWhitelist(tokenId) {
-        return this.whitelist.tokenId[tokenId];
+        return this.whitelist.tokenId[tokenId] ?? [];
     }
 
     getLeaves(tokenId) {
