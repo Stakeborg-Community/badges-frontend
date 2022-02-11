@@ -1,46 +1,68 @@
 import {MerkleTree} from "merkletreejs";
 import keccak256 from "keccak256";
-import whitelist from "./whitelist.json";
+//import whitelist from "./whitelist.json";
 
- //TODO: precalculate the merkle trees, do not do it on request, but rather on load
- const tokenWhitelist = (tokenId) => {
-    return whitelist.tokenId[tokenId];
-}
+export default class Merkle {
 
-const getLeaves = (tokenId) => {
-    const wl = tokenWhitelist(tokenId);
-    return wl.map(address => keccak256(address));
-} 
+    constructor(whitelist) {
+        this.whitelist = whitelist;
+        this.trees = [];
+        return (async () => {
+            try {      
+                const res = await fetch("https://ipfs.io/ipfs/QmRMnnU2gu8eVpo8UT6h6sPcih1nAAXQVyh7DyhzTxaxAs?filename=whitelist.json");
+                    
+                if (!res.ok) {
+                  throw Error(
+                    `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
+                  );
+                }
+                const data = await res.json();
+                
+                console.log("Whitelist received", data);
+                this.whitelist = data;
+            } catch (error) {
+                console.error(error);
+            }
+            console.log("Merkle root for all tokens:");
+            for (let id in this.whitelist.tokenId)
+            {
+                const leaves = this.getLeaves(id);
+                this.trees[id] = new MerkleTree(leaves, keccak256, {sort: true});
+                console.log(id, this.getRoot(id));
+            }
 
-const getTree = (tokenId) => {
-    const leaves = getLeaves(tokenId);
-    return new MerkleTree(leaves, keccak256, {sort: true});
-}
+            return this;
+        })();       
+    }
 
-const getRoot = (tokenId) => {
-    const tree = getTree(tokenId);
-    return tree.getRoot().toString('hex');
-}
+    tokenWhitelist(tokenId) {
+        return this.whitelist.tokenId[tokenId];
+    }
 
-const buf2hex = x => '0x'+x.toString('hex')
+    getLeaves(tokenId) {
+        const wl = this.tokenWhitelist(tokenId);
+        return wl.map(address => keccak256(address));
+    } 
 
-const getProof = (address, tokenId) => {
-    const leaf = keccak256(address);
-    const tree = getTree(tokenId);
-    return tree.getProof(leaf).map(x => buf2hex(x.data))
-}
+    getTree(tokenId) {
+        return this.trees[tokenId];
+    }
 
-const isWhitelisted = (address, tokenId) => {
-    const wl = tokenWhitelist(tokenId).map((str) => str.toLowerCase());
-    return wl.includes(address.toLowerCase());
-}
+    getRoot(tokenId) {
+        const tree = this.getTree(tokenId);
+        return tree.getRoot().toString('hex');
+    }
 
-export {
-    getProof,
-    getLeaves,
-    tokenWhitelist,
-    getTree, 
-    getRoot,
-    whitelist,
-    isWhitelisted
+    buf2hex = x => '0x'+x.toString('hex')
+
+    getProof(address, tokenId) {
+        const leaf = keccak256(address);
+        const tree = this.getTree(tokenId);
+        return tree.getProof(leaf).map(x => this.buf2hex(x.data))
+    }
+
+    isWhitelisted(address, tokenId) {
+        const wl = this.tokenWhitelist(tokenId).map((str) => str.toLowerCase());
+        return wl.includes(address.toLowerCase());
+    }
 }

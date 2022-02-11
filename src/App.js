@@ -7,16 +7,11 @@ import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer, Spinne
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
-import * as Merkle from "./whitelisting/merkletree.js";
+import Merkle from "./whitelisting/merkletree.js";
 
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 const TOKEN_IDS = [0,1,2,3,4];
 
-console.log("Merkle root for all tokens:");
-for (let i=0; i<TOKEN_IDS.length; i++)
-{
-  console.log(TOKEN_IDS[i], Merkle.getRoot(TOKEN_IDS[i]));
-}
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -24,6 +19,7 @@ function App() {
   const [signer, setSigner] = useState(null);
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
+  const [merkle, setMerkle] = useState(null);
 
   // Cards owned by the connected account
   const [ownedCards, setOwnedCards] = useState([]);
@@ -37,7 +33,7 @@ function App() {
     checkIfWalletIsConnected();
 
     try {
-      const proof = Merkle.getProof(currentAccount, tokenId);
+      const proof = merkle.getProof(currentAccount, tokenId);
       let nftTx;
 
       switch (tokenId) {
@@ -74,14 +70,15 @@ function App() {
   }
 
   useEffect( () => {
+    new Merkle().then((result) => setMerkle(result));
     checkIfWalletIsConnected();
   }, []);
 
   useEffect(() => {
-    if (connectedContract !== null) {
+    if (connectedContract !== null && merkle !== null) {
       getCardsOwned();
     }
-  }, [connectedContract])
+  }, [connectedContract, merkle])
 
   useEffect( () => {
     if (cardsOwnedStatus !== null) {
@@ -123,7 +120,7 @@ function App() {
     let ownedstatus = {};
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
-      const whitelisted = Merkle.isWhitelisted(currentAccount, id);
+      const whitelisted = merkle.isWhitelisted(currentAccount, id);
       
       try {
         const balance = await connectedContract.balanceOf(currentAccount, id)
