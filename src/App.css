@@ -11,8 +11,12 @@
   margin-bottom: 100px
 }
 
-.grayscale {
-  filter: grayscale(80%);
+
+body {
+  background-image: url("bg.png") !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
 }
 
 

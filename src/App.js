@@ -1,5 +1,4 @@
 import { ethers } from "ethers";
-import SeniorityBadge from "./utils/SeniorityBadge.json";
 import SeniorityBadgev2 from "./utils/SeniorityBadge-v2.json";
 import './App.css';
 import { useState, useEffect } from "react";
@@ -8,17 +7,11 @@ import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer, Spinne
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
-import * as Merkle from "./whitelisting/merkletree.js";
+import Merkle from "./whitelisting/merkletree.js";
 
-const CONTRACT_ADDRESS = "0xe541fe43f74c3C2111D2499789Dc16808E355a9C";
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
-const TOKEN_IDS = [0,1,2,3,4];
+const TOKEN_IDS = [0,1,2,3,4,69420, 69420, 69420, 69420, 69420];
 
-console.log("Merkle root for all tokens:");
-for (let i=0; i<TOKEN_IDS.length; i++)
-{
-  console.log(TOKEN_IDS[i], Merkle.getRoot(TOKEN_IDS[i]));
-}
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -26,6 +19,7 @@ function App() {
   const [signer, setSigner] = useState(null);
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
+  const [merkle, setMerkle] = useState(null);
 
   // Cards owned by the connected account
   const [ownedCards, setOwnedCards] = useState([]);
@@ -34,12 +28,12 @@ function App() {
   // Cards which cannot be minted yet
   const [nonMintableCards, setNonMintableCards] = useState([]);
 
-  const mint = async (tokenId) => {
+  const mint = async (tokenId, setLoading) => {
     console.log("trying to mint: ", tokenId); 
     checkIfWalletIsConnected();
 
     try {
-      const proof = Merkle.getProof(currentAccount, tokenId);
+      const proof = merkle.getProof(currentAccount, tokenId);
       let nftTx;
 
       switch (tokenId) {
@@ -60,7 +54,9 @@ function App() {
           break;
       }
       
-			console.log('Mining....', nftTx.hash);
+			console.log('Minting....', nftTx.hash);
+      setLoading(true);
+      
       let tx = await nftTx.wait();
       console.log('Minted!', tx);
         
@@ -74,14 +70,15 @@ function App() {
   }
 
   useEffect( () => {
+    new Merkle().then((result) => setMerkle(result));
     checkIfWalletIsConnected();
   }, []);
 
   useEffect(() => {
-    if (connectedContract !== null) {
+    if (connectedContract !== null && merkle !== null) {
       getCardsOwned();
     }
-  }, [connectedContract])
+  }, [connectedContract, merkle])
 
   useEffect( () => {
     if (cardsOwnedStatus !== null) {
@@ -123,7 +120,7 @@ function App() {
     let ownedstatus = {};
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
-      const whitelisted = Merkle.isWhitelisted(currentAccount, id);
+      const whitelisted = merkle.isWhitelisted(currentAccount, id);
       
       try {
         const balance = await connectedContract.balanceOf(currentAccount, id)
@@ -247,7 +244,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='150px' spacing='30px'>
+          <SimpleGrid minChildWidth='220px' spacing='30px'>
             {ownedCards}
             {mintableCards}
             {nonMintableCards}
