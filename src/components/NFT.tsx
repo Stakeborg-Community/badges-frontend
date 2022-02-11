@@ -141,7 +141,7 @@ export const NFTCard = ({
 
   return (
       <Box maxW={size} borderRadius='lg' overflow="hidden" boxShadow='0px 0px 0px yellow' >
-        <a href="#"><Image className={imageClasses}  src={imageUrl} borderRadius="lg" w={size} /></a>
+        <a href="#"><Image className={imageClasses}  src={imageUrl} borderRadius="lg" w={size} loading="lazy" /></a>
         {button}
       </Box>
 
