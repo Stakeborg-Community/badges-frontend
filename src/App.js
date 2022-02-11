@@ -40,7 +40,26 @@ function App() {
 
     try {
       const proof = Merkle.getProof(currentAccount, tokenId);
-      let nftTx = await connectedContract.mintBootstrapper(proof);
+      let nftTx;
+
+      switch (tokenId) {
+        case 0:
+          nftTx = await connectedContract.mintBootstrapper(proof);
+          break;
+        case 1:
+          nftTx = await connectedContract.mintVeteran(proof);
+          break;
+        case 2:
+          nftTx = await connectedContract.mintAdopter(proof);
+          break;
+        case 3:
+          nftTx = await connectedContract.mintSustainer(proof);
+          break;
+        case 4:
+          nftTx = await connectedContract.mintBeliever(proof);
+          break;
+      }
+      
 			console.log('Mining....', nftTx.hash);
       let tx = await nftTx.wait();
       console.log('Minted!', tx);
