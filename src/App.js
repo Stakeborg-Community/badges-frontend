@@ -34,7 +34,7 @@ function App() {
   // Cards which cannot be minted yet
   const [nonMintableCards, setNonMintableCards] = useState([]);
 
-  const mint = async (tokenId) => {
+  const mint = async (tokenId, setLoading) => {
     console.log("trying to mint: ", tokenId); 
     checkIfWalletIsConnected();
 
@@ -60,7 +60,9 @@ function App() {
           break;
       }
       
-			console.log('Mining....', nftTx.hash);
+			console.log('Minting....', nftTx.hash);
+      setLoading(true);
+      
       let tx = await nftTx.wait();
       console.log('Minted!', tx);
         

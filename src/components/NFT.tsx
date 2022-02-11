@@ -47,6 +47,7 @@ export interface NFTData {
 export const NFT = (props: NFTProps) => {
   const _isMounted = useRef(true);
   const [nftData, setNftData] = React.useState<NFTData>();
+  const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string>();
   const fetchNFTData = useCallback(async () => {
     try {
@@ -84,9 +85,9 @@ export const NFT = (props: NFTProps) => {
     return () => {
       _isMounted.current = false;
     };
-  }, [props.ownedStatus]);
+  }, [props.ownedStatus, loading]);
 
-  return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} />;
+  return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} loading={loading} setLoading={setLoading}/>;
 };
 
 /**
@@ -97,11 +98,15 @@ export const NFTCard = ({
   errorMessage = '',
   size = 'lg',
   mintingFn,
+  loading,
+  setLoading
 }: {
   data: NFTData | undefined | null;
   errorMessage?: string | undefined;
   size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
   mintingFn: Function;
+  loading: boolean;
+  setLoading: Function;
 }) => {
   const name = data?.name;
   const imageUrl = data?.imageUrl;
@@ -110,9 +115,10 @@ export const NFTCard = ({
   const tokenId = data?.tokenId;
   const displayName = name;
 
+  
   const mint = () =>
   {
-    mintingFn(tokenId);
+    mintingFn(tokenId, setLoading);
   }
 
   if (errorMessage) {
@@ -128,7 +134,7 @@ export const NFTCard = ({
   let button;
   if (ownedStatus !== NFTOwnershipStatus.Owned)
   {
-    button = <Button color='white' backgroundColor='#0c8af2' variant='solid' onClick={mint} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable} >
+    button = <Button color='white' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'   onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
               Mint
             </Button>;
   }
