@@ -23,6 +23,7 @@ for (let i=0; i<TOKEN_IDS.length; i++)
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
   const [currentAccount, setCurrentAccount] = useState("");
+  const [signer, setSigner] = useState(null);
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
 
@@ -39,11 +40,14 @@ function App() {
 
     try {
       const proof = Merkle.getProof(currentAccount, tokenId);
-      const result = await connectedContract.mintBootstrapper(proof);
-      console.log(result);
+      let nftTx = await connectedContract.mintBootstrapper(proof);
+			console.log('Mining....', nftTx.hash);
+      let tx = await nftTx.wait();
+      console.log('Minted!', tx);
+        
     } catch (error) {
-      console.error(`Failed to get mint token ${tokenId} for address ${currentAccount}`);
-      return;
+      console.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
+      console.error(error);
     }
   }
 
@@ -59,19 +63,23 @@ function App() {
       let ownedstatus = {};
       for (let i=0; i<TOKEN_IDS.length; i++) {
         const id = TOKEN_IDS[i];
-  
+        const whitelisted = Merkle.isWhitelisted(currentAccount, id);
+        
         try {
           const balance = await connectedContract.balanceOf(currentAccount, id)
           console.log(`Owned token ${id}: ${balance.toString()}`);
           if (balance.toString() !== "0") {
             ownedstatus[id] = NFTOwnershipStatus.Owned;
           } 
-          else {
+          else if (whitelisted) {
+            ownedstatus[id] = NFTOwnershipStatus.Mintable;
+          } else {
             ownedstatus[id] = NFTOwnershipStatus.NonMintable;
           }
         
         } catch (error) {
           console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
+          console.error(error);
           return;
         }
       }  
@@ -88,21 +96,28 @@ function App() {
     const updateNFTArrays = () => {
       let ownedCardsArray = [];
       let nonMintableCardsArray = [];
-      
-      // TODO: Create the mintable cards array once whitelisting check is implemented
       let mintableCardsArray = [];
   
       for (let i=0; i<TOKEN_IDS.length; i++) {
         let id = TOKEN_IDS[i];
-        if (cardsOwnedStatus[id] === NFTOwnershipStatus.Owned) {
-          ownedCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NFTOwnershipStatus.Owned} mintingFn={mint}></NFT>)
-        } else {
-          nonMintableCardsArray.push(<NFT key={id} tokenId={id} ownedStatus={NFTOwnershipStatus.NonMintable} mintingFn={mint}></NFT>)
+        let nftComponent = <NFT key={id} tokenId={id} ownedStatus={cardsOwnedStatus[id]} mintingFn={mint}></NFT>;
+        switch (cardsOwnedStatus[id]) {
+          case NFTOwnershipStatus.Owned:
+            ownedCardsArray.push(nftComponent);
+            break;
+
+          case NFTOwnershipStatus.Mintable:
+            mintableCardsArray.push(nftComponent);
+            break;
+            
+          case NFTOwnershipStatus.NonMintable:
+            nonMintableCardsArray.push(nftComponent);
+            break;
         }
       }
       console.log("Create nft arrays");
-      console.log(ownedCardsArray);
       setOwnedCards(ownedCardsArray);
+      setMintableCards(mintableCardsArray);
       setNonMintableCards(nonMintableCardsArray);
     }
 
@@ -121,7 +136,7 @@ function App() {
     } else {
       console.log("We have the ethereum object", ethereum);
     }
-  
+    await ethereum.enable();
     // Check if metamask is connected to Mumbai. Trigger network switch if not
     await switchNetworkMumbai();
     const accounts = await ethereum.request({method: 'eth_accounts'});
@@ -136,6 +151,7 @@ function App() {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS_V2, SeniorityBadgev2.abi, signer);
+    setSigner(signer);
     setConnectedContract(contract);
   }
  

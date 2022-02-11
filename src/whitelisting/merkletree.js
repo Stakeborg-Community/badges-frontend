@@ -22,10 +22,17 @@ const getRoot = (tokenId) => {
     return tree.getRoot().toString('hex');
 }
 
+const buf2hex = x => '0x'+x.toString('hex')
+
 const getProof = (address, tokenId) => {
     const leaf = keccak256(address);
     const tree = getTree(tokenId);
-    return tree.getProof(leaf)[0].data.toString('hex');
+    return tree.getProof(leaf).map(x => buf2hex(x.data))
+}
+
+const isWhitelisted = (address, tokenId) => {
+    const wl = tokenWhitelist(tokenId).map((str) => str.toLowerCase());
+    return wl.includes(address.toLowerCase());
 }
 
 export {
@@ -34,5 +41,6 @@ export {
     tokenWhitelist,
     getTree, 
     getRoot,
-    whitelist
+    whitelist,
+    isWhitelisted
 }
