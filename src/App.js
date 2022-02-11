@@ -4,7 +4,7 @@ import SeniorityBadgev2 from "./utils/SeniorityBadge-v2.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
-import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer } from '@chakra-ui/react';
+import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer, Spinner } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
@@ -17,7 +17,7 @@ const TOKEN_IDS = [0,1,2,3,4];
 console.log("Merkle root for all tokens:");
 for (let i=0; i<TOKEN_IDS.length; i++)
 {
-  console.log(Merkle.getRoot(TOKEN_IDS[i]));
+  console.log(TOKEN_IDS[i], Merkle.getRoot(TOKEN_IDS[i]));
 }
 
 function App() {
