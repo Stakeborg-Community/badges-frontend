@@ -1,15 +1,22 @@
 {
   "files": {
-    "main.css": "/badges-frontend/static/css/main.d7dae427.css",
-    "main.js": "/badges-frontend/static/js/main.56fc5262.js",
-    "static/js/787.481f47c2.chunk.js": "/badges-frontend/static/js/787.481f47c2.chunk.js",
+    "main.css": "/badges-frontend/static/css/main.7bba2540.chunk.css",
+    "main.js": "/badges-frontend/static/js/main.9325bd4b.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.9325bd4b.chunk.js.map",
+    "runtime-main.js": "/badges-frontend/static/js/runtime-main.ada33921.js",
+    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.ada33921.js.map",
+    "static/js/2.db86faa8.chunk.js": "/badges-frontend/static/js/2.db86faa8.chunk.js",
+    "static/js/2.db86faa8.chunk.js.map": "/badges-frontend/static/js/2.db86faa8.chunk.js.map",
+    "static/js/3.7ac67c21.chunk.js": "/badges-frontend/static/js/3.7ac67c21.chunk.js",
+    "static/js/3.7ac67c21.chunk.js.map": "/badges-frontend/static/js/3.7ac67c21.chunk.js.map",
     "index.html": "/badges-frontend/index.html",
-    "main.d7dae427.css.map": "/badges-frontend/static/css/main.d7dae427.css.map",
-    "main.56fc5262.js.map": "/badges-frontend/static/js/main.56fc5262.js.map",
-    "787.481f47c2.chunk.js.map": "/badges-frontend/static/js/787.481f47c2.chunk.js.map"
+    "static/css/main.7bba2540.chunk.css.map": "/badges-frontend/static/css/main.7bba2540.chunk.css.map",
+    "static/js/2.db86faa8.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.db86faa8.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/css/main.d7dae427.css",
-    "static/js/main.56fc5262.js"
+    "static/js/runtime-main.ada33921.js",
+    "static/js/2.db86faa8.chunk.js",
+    "static/css/main.7bba2540.chunk.css",
+    "static/js/main.9325bd4b.chunk.js"
   ]
 }
