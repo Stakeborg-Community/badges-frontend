@@ -47,7 +47,10 @@ function App() {
         
     } catch (error) {
       console.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
-      console.error(error);
+      alert(error.data.message);
+    }
+    finally {
+      getCardsOwned();
     }
   }
 
@@ -56,75 +59,73 @@ function App() {
   }, []);
 
   useEffect(() => {
-    
-    const getCardsOwned = async () => {
-      console.log('Contract instance:');
-      console.log(connectedContract);
-      let ownedstatus = {};
-      for (let i=0; i<TOKEN_IDS.length; i++) {
-        const id = TOKEN_IDS[i];
-        const whitelisted = Merkle.isWhitelisted(currentAccount, id);
-        
-        try {
-          const balance = await connectedContract.balanceOf(currentAccount, id)
-          console.log(`Owned token ${id}: ${balance.toString()}`);
-          if (balance.toString() !== "0") {
-            ownedstatus[id] = NFTOwnershipStatus.Owned;
-          } 
-          else if (whitelisted) {
-            ownedstatus[id] = NFTOwnershipStatus.Mintable;
-          } else {
-            ownedstatus[id] = NFTOwnershipStatus.NonMintable;
-          }
-        
-        } catch (error) {
-          console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
-          console.error(error);
-          return;
-        }
-      }  
-      setCardsOwnedStatus(ownedstatus);    
-    }   
-
-    // These functions get called only after connectedContract state var gets updated
     if (connectedContract !== null) {
       getCardsOwned();
     }
   }, [connectedContract])
 
   useEffect( () => {
-    const updateNFTArrays = () => {
-      let ownedCardsArray = [];
-      let nonMintableCardsArray = [];
-      let mintableCardsArray = [];
-  
-      for (let i=0; i<TOKEN_IDS.length; i++) {
-        let id = TOKEN_IDS[i];
-        let nftComponent = <NFT key={id} tokenId={id} ownedStatus={cardsOwnedStatus[id]} mintingFn={mint}></NFT>;
-        switch (cardsOwnedStatus[id]) {
-          case NFTOwnershipStatus.Owned:
-            ownedCardsArray.push(nftComponent);
-            break;
-
-          case NFTOwnershipStatus.Mintable:
-            mintableCardsArray.push(nftComponent);
-            break;
-            
-          case NFTOwnershipStatus.NonMintable:
-            nonMintableCardsArray.push(nftComponent);
-            break;
-        }
-      }
-      console.log("Create nft arrays");
-      setOwnedCards(ownedCardsArray);
-      setMintableCards(mintableCardsArray);
-      setNonMintableCards(nonMintableCardsArray);
-    }
-
     if (cardsOwnedStatus !== null) {
       updateNFTArrays();
     }
   }, [cardsOwnedStatus]);  
+
+  const updateNFTArrays = () => {
+    let ownedCardsArray = [];
+    let nonMintableCardsArray = [];
+    let mintableCardsArray = [];
+
+    for (let i=0; i<TOKEN_IDS.length; i++) {
+      let id = TOKEN_IDS[i];
+      let nftComponent = <NFT key={id} tokenId={id} ownedStatus={cardsOwnedStatus[id]} mintingFn={mint}></NFT>;
+      switch (cardsOwnedStatus[id]) {
+        case NFTOwnershipStatus.Owned:
+          ownedCardsArray.push(nftComponent);
+          break;
+
+        case NFTOwnershipStatus.Mintable:
+          mintableCardsArray.push(nftComponent);
+          break;
+          
+        case NFTOwnershipStatus.NonMintable:
+          nonMintableCardsArray.push(nftComponent);
+          break;
+      }
+    }
+    console.log("Create nft arrays");
+    setOwnedCards(ownedCardsArray);
+    setMintableCards(mintableCardsArray);
+    setNonMintableCards(nonMintableCardsArray);
+  }
+
+  const getCardsOwned = async () => {
+    console.log('Contract instance:');
+    console.log(connectedContract);
+    let ownedstatus = {};
+    for (let i=0; i<TOKEN_IDS.length; i++) {
+      const id = TOKEN_IDS[i];
+      const whitelisted = Merkle.isWhitelisted(currentAccount, id);
+      
+      try {
+        const balance = await connectedContract.balanceOf(currentAccount, id)
+        console.log(`Owned token ${id}: ${balance.toString()}`);
+        if (balance.toString() !== "0") {
+          ownedstatus[id] = NFTOwnershipStatus.Owned;
+        } 
+        else if (whitelisted) {
+          ownedstatus[id] = NFTOwnershipStatus.Mintable;
+        } else {
+          ownedstatus[id] = NFTOwnershipStatus.NonMintable;
+        }
+      
+      } catch (error) {
+        console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
+        console.error(error);
+        return;
+      }
+    }  
+    setCardsOwnedStatus(ownedstatus);    
+  }   
 
 
   const checkIfWalletIsConnected = async () => {
@@ -136,7 +137,6 @@ function App() {
     } else {
       console.log("We have the ethereum object", ethereum);
     }
-    await ethereum.enable();
     // Check if metamask is connected to Mumbai. Trigger network switch if not
     await switchNetworkMumbai();
     const accounts = await ethereum.request({method: 'eth_accounts'});

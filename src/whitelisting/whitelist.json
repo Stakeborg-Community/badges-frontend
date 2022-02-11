@@ -4,9 +4,15 @@
         "0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7",
         "0x3d88CBC3cE19fc2F388fE044248dFb46e0199C5f"
       ],
-      "1": [],
+      "1": [
+        "0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7",
+        "0x3d88CBC3cE19fc2F388fE044248dFb46e0199C5f"
+      ],
       "2": [],
-      "3": [],
+      "3": [
+        "0x0E1774FD4f836E6Ba2E22d0e11F4c69684ae4EB7",
+        "0x3d88CBC3cE19fc2F388fE044248dFb46e0199C5f"
+      ],
       "4": []
     }
   }
