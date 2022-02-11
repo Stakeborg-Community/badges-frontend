@@ -15,11 +15,10 @@
 }
 
 
-
 .MINTABLE {
-    filter: grayscale(40%) blur(3px);
+    filter: grayscale(90%); 
 }
 
 .MINTABLE:hover {
-    filter: none
+    filter: grayscale(40%);
 }

@@ -128,7 +128,7 @@ export const NFTCard = ({
   let button;
   if (ownedStatus !== NFTOwnershipStatus.Owned)
   {
-    button = <Button leftIcon={<CopyIcon/>} colorScheme='teal' variant='solid' onClick={mint} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable} >
+    button = <Button color='white' backgroundColor='#0c8af2' variant='solid' onClick={mint} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable} >
               Mint
             </Button>;
   }
