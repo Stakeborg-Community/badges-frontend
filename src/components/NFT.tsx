@@ -1,4 +1,5 @@
 import "./NFT.css";
+import * as NFTOwnershipStatus from "../components/NFTOwnershipStatus";
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Button,
@@ -124,13 +125,18 @@ export const NFTCard = ({
   }
 
   let imageClasses = ownedStatus?.description;
+  let button;
+  if (ownedStatus !== NFTOwnershipStatus.Owned)
+  {
+    button = <Button leftIcon={<CopyIcon/>} colorScheme='teal' variant='solid' onClick={mint} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable} >
+              Mint
+            </Button>;
+  }
 
   return (
       <Box maxW={size} borderRadius='lg' overflow="hidden" boxShadow='0px 0px 0px yellow' >
         <a href="#"><Image className={imageClasses}  src={imageUrl} borderRadius="lg" w={size} /></a>
-        <Button leftIcon={<CopyIcon/>} colorScheme='teal' variant='solid' onClick={mint}>
-          Mint
-        </Button>
+        {button}
       </Box>
 
   );
