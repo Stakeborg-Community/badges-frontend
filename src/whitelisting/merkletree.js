@@ -53,12 +53,10 @@ export default class Merkle {
         return tree.getRoot().toString('hex');
     }
 
-    buf2hex = x => '0x'+x.toString('hex')
-
     getProof(address, tokenId) {
         const leaf = keccak256(address);
         const tree = this.getTree(tokenId);
-        return tree.getProof(leaf).map(x => this.buf2hex(x.data))
+        return tree.getHexProof(leaf)
     }
 
     isWhitelisted(address, tokenId) {

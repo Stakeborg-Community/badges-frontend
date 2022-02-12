@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from '@web3-ui/components';
 import { extendTheme } from "@chakra-ui/react"
+import { None } from 'framer-motion';
 
 const theme = extendTheme({
   fonts: {
@@ -16,7 +17,8 @@ const theme = extendTheme({
     Modal: {
       baseStyle: (props) => ({
         dialog: {
-          bg: 'rgba(0, 0, 0, 0.0)'
+          bg: 'rgba(0, 0, 0, 0.0)',
+          shadow: 'none'
         }
       })
     }

@@ -30,11 +30,12 @@ function App() {
   const mint = async (tokenId, setLoading) => {
     console.log("trying to mint: ", tokenId); 
     checkIfWalletIsConnected();
+    let nftTx;
+    let tx;
 
     try {
       const proof = merkle.getProof(currentAccount, tokenId);
-      let nftTx;
-
+      
       switch (tokenId) {
         case 0:
           nftTx = await connectedContract.mintBootstrapper(proof);
@@ -57,18 +58,24 @@ function App() {
       
 			console.log('Minting....', nftTx.hash);
       setLoading(true);
-      
-      let tx = await nftTx.wait();
-      console.log('Minted!', tx);
-        
+    } catch (error) {
+      alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
+      return;
+    } 
+
+
+    try{    
+      tx = await nftTx.wait();
+      console.log('Minted!', tx);  
     } catch (error) {
       console.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
-      alert(error.data.message);
+      alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
     }
     finally {
       getCardsOwned();
     }
-  }
+  
+}
 
   useEffect( () => {
     new Merkle().then((result) => setMerkle(result));
