@@ -3,20 +3,19 @@ import SeniorityBadgev2 from "./utils/SeniorityBadge-v2.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
-import { Container, SimpleGrid, Box, Button, Text, Heading, Flex, Spacer, Spinner } from '@chakra-ui/react';
+import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
 import Merkle from "./whitelisting/merkletree.js";
 
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
-const TOKEN_IDS = [0,1,2,3,4,69420, 69420, 69420, 69420, 69420];
+const TOKEN_IDS = [0,1,2,3,4,69420]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
 
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
   const [currentAccount, setCurrentAccount] = useState("");
-  const [signer, setSigner] = useState(null);
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
   const [merkle, setMerkle] = useState(null);
@@ -52,6 +51,8 @@ function App() {
         case 4:
           nftTx = await connectedContract.mintBeliever(proof);
           break;
+        default:
+          alert("You are trying to mint a non-existent token.");
       }
       
 			console.log('Minting....', nftTx.hash);
@@ -105,6 +106,9 @@ function App() {
           
         case NFTOwnershipStatus.NonMintable:
           nonMintableCardsArray.push(nftComponent);
+          break;
+        
+        default:
           break;
       }
     }
@@ -167,7 +171,6 @@ function App() {
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
     const contract = new ethers.Contract(CONTRACT_ADDRESS_V2, SeniorityBadgev2.abi, signer);
-    setSigner(signer);
     setConnectedContract(contract);
   }
  

@@ -5,10 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from '@web3-ui/components';
+import { extendTheme } from "@chakra-ui/react"
+
+const theme = extendTheme({
+  fonts: {
+    heading: 'HeadingFont',
+    body: 'BodyFont'
+  },
+})
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider>
+    <Provider theme={theme}>
       <App />
     </Provider>
   </React.StrictMode>,
