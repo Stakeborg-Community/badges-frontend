@@ -93,7 +93,7 @@ class Plugin extends Singleton {
 	public function badges_shortcode( $atts, $content = '' ) {
 
 		add_action(
-			'wp_body_open',
+			'wp_footer',
 			function() {
 				wp_enqueue_script( 'stakeborg-badges' );
 				wp_print_styles( array( 'stakeborg-badges' ) );
