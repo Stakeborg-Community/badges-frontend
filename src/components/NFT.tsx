@@ -8,10 +8,16 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
-import {  
-  CopyIcon
-} from '@chakra-ui/icons';
-
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure 
+} from '@chakra-ui/react'
 
 
 export interface NFTProps {
@@ -35,10 +41,9 @@ export interface NFTProps {
 
 export interface NFTData {
   tokenId: string;
-  imageUrl?: string;
-  image_lgUrl?: string;
-  image_mdUrl?: string;
-  image_smUrl?: string;
+  image_svg?: string;
+  image_lg?: string;
+  image_sm?: string;
   name: string | null;
   description: string;
   ownedStatus: Symbol;
@@ -55,7 +60,7 @@ export const NFT = (props: NFTProps) => {
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/QmR6HVWj9zrfVzVpaz8C9A8k9QwyiTk2V9X9QmqUmoAgeu/" + props.tokenId + ".json");
+      const res = await fetch("https://ipfs.io/ipfs/Qmc2qn27xNCv4RbTw5kpgA1tbogaZ5QY6MLf5uyMDUZTWW/" + props.tokenId + ".json");
           
       if (!res.ok) {
         throw Error(
@@ -66,10 +71,9 @@ export const NFT = (props: NFTProps) => {
       if (_isMounted.current) {
         setNftData({
           tokenId: props.tokenId,
-          imageUrl: data.image,
-          image_lgUrl: data['image_lg'],
-          image_mdUrl: data['image_md'],
-          image_smUrl: data['image_sm'],
+          image_svg:  data['image_svg'],
+          image_lg: data['image_lg'],
+          image_sm: data['image_sm'],
           name: data.name,
           description: data.description,
           ownedStatus: props.ownedStatus
@@ -115,17 +119,17 @@ export const NFTCard = ({
   setLoading: Function;
 }) => {
   const name = data?.name;
-  const imageUrl = data?.imageUrl;
   const description = data?.description;
   const ownedStatus = data?.ownedStatus;
   const tokenId = data?.tokenId;
   const displayName = name;
 
-  
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const mint = () =>
   {
     mintingFn(tokenId, setLoading);
   }
+
 
   if (errorMessage) {
     return (
@@ -140,20 +144,33 @@ export const NFTCard = ({
   let button;
   if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
   {
-    button = <Button color='white' boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
+    button = <Button color='white' className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
               Mint
             </Button>;
   }
+  const image = <Image className={imageClasses}  src={data?.image_lg} borderRadius="lg" w={size} loading="lazy" />;
+
+
+
+  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom variant="transparent">
+        <ModalOverlay/>
+        <ModalContent>
+          <ModalBody>
+            {image}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
   return (
-      <Box maxW={size} p='3' borderRadius='lg' overflow="hidden">
+      <Box maxW={size} borderRadius='lg' >
         
-        <a href="#">
-          <Image className={imageClasses}  src={data?.image_lgUrl} borderRadius="lg" w={size} loading="lazy" />
+        <a href="#" onClick={onOpen}>
+          {image}
+          {modal}
         </a>
 
         {button}
-
+        
       </Box>
 
   );
