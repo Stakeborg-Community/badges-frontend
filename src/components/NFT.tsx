@@ -1,5 +1,5 @@
 import "./NFT.css";
-import * as NFTOwnershipStatus from "../components/NFTOwnershipStatus";
+import * as NFTOwnershipStatus from "../enums/NFTOwnershipStatus";
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Button,

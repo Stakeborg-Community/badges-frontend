@@ -1,13 +1,13 @@
 import { ethers } from "ethers";
-import SeniorityBadgev2 from "./utils/SeniorityBadge-v2.json";
+import SeniorityBadgev2 from "./json/SeniorityBadge-v2.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
 import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
-import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
-import Merkle from "./whitelisting/merkletree.js";
+import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
+import Merkle from "./components/merkletree.js";
 
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 const TOKEN_IDS = [0,1,2,3,4,69420]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
