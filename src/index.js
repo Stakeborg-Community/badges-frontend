@@ -12,6 +12,15 @@ const theme = extendTheme({
     heading: 'HeadingFont',
     body: 'BodyFont'
   },
+  components: {
+    Modal: {
+      baseStyle: (props) => ({
+        dialog: {
+          bg: 'rgba(0, 0, 0, 0.0)'
+        }
+      })
+    }
+  }
 })
 
 

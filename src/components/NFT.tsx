@@ -8,7 +8,16 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
-
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure 
+} from '@chakra-ui/react'
 
 
 export interface NFTProps {
@@ -115,11 +124,12 @@ export const NFTCard = ({
   const tokenId = data?.tokenId;
   const displayName = name;
 
-  
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const mint = () =>
   {
     mintingFn(tokenId, setLoading);
   }
+
 
   if (errorMessage) {
     return (
@@ -138,16 +148,29 @@ export const NFTCard = ({
               Mint
             </Button>;
   }
+  const image = <Image className={imageClasses}  src={data?.image_lg} borderRadius="lg" w={size} loading="lazy" />;
+
+
+
+  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom variant="transparent">
+        <ModalOverlay/>
+        <ModalContent>
+          <ModalBody>
+            {image}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
   return (
       <Box maxW={size} borderRadius='lg' >
         
-        <a href="#">
-          <Image className={imageClasses}  src={data?.image_lg} borderRadius="lg" w={size} loading="lazy" />
+        <a href="#" onClick={onOpen}>
+          {image}
+          {modal}
         </a>
 
         {button}
-
+        
       </Box>
 
   );
