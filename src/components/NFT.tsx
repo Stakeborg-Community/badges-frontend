@@ -140,7 +140,7 @@ export const NFTCard = ({
     );
   }
 
-  let imageClasses = ownedStatus?.description;
+  let commonImageClasses = ownedStatus?.description;
   let button;
   if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
   {
@@ -148,7 +148,9 @@ export const NFTCard = ({
               Mint
             </Button>;
   }
-  const image = <Image className={imageClasses}  src={data?.image_lg} borderRadius="lg" w={size} loading="lazy" />;
+  const image = <Image className={commonImageClasses  + ' hoverglow'}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
+  const imageModal = <Image className={commonImageClasses}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
+
 
 
 
@@ -156,7 +158,7 @@ export const NFTCard = ({
         <ModalOverlay/>
         <ModalContent>
           <ModalBody>
-            {image}
+            {imageModal}
           </ModalBody>
         </ModalContent>
       </Modal>
