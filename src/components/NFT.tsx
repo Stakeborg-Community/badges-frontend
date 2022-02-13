@@ -167,7 +167,7 @@ export const NFTCard = ({
       <Box maxW={size} borderRadius='lg' >
         
         <a href="#" onClick={onOpen}>
-          {image}
+          {imageModal}
           {modal}
         </a>
 
