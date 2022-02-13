@@ -23,13 +23,14 @@ export default class Merkle {
             } catch (error) {
                 console.error(error);
             }
-            console.log("Merkle root for all tokens:");
+            console.groupCollapsed("Merkle root for all tokens:");
             for (let id in this.whitelist.tokenId)
             {
                 const leaves = this.getLeaves(id);
                 this.trees[id] = new MerkleTree(leaves, keccak256, {sort: true});
                 console.log(id, this.getRoot(id));
             }
+            console.groupEnd();
 
             return this;
         })();       

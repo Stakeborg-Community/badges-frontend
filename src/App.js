@@ -126,8 +126,10 @@ function App() {
   }
 
   const getCardsOwned = async () => {
-    console.log('Contract instance:');
+    console.groupCollapsed('Contract instance');
     console.log(connectedContract);
+    console.groupEnd();
+    console.groupCollapsed('Owned tokens');
     let ownedstatus = {};
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
@@ -135,7 +137,7 @@ function App() {
       
       try {
         const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log(`Owned token ${id}: ${balance.toString()}`);
+        console.log(`${id}: ${balance.toString()}`);
         if (balance.toString() !== "0") {
           ownedstatus[id] = NFTOwnershipStatus.Owned;
         } 
@@ -148,16 +150,17 @@ function App() {
       } catch (error) {
         console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
         console.error(error);
+        console.groupEnd();
         return;
       }
-    }  
+    }
+    console.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
   }   
 
 
   const checkIfWalletIsConnected = async () => {
     const {ethereum} = window;
-  
     if (!ethereum) {
       console.log("Make sure you have metamask");
       return;
@@ -173,7 +176,7 @@ function App() {
       console.log("Found authorized account:", account);
       setCurrentAccount(account);
     }
-
+    
     // Connect to contract
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();

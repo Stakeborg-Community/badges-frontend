@@ -27,5 +27,5 @@
     box-shadow:none;
   }
 .hoverglow:hover, .hoverglow:active {
-    box-shadow: 0 0 10px #ffd50077, inset 0 0 2px #ffd000;
+    box-shadow: 0 0 2px #ffd50077, inset 0 0 5px #ffd000;
 }
