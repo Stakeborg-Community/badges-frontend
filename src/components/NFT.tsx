@@ -152,7 +152,7 @@ export const NFTCard = ({
 
 
 
-  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom variant="transparent">
+  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom>
         <ModalOverlay/>
         <ModalContent>
           <ModalBody>
