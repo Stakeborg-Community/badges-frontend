@@ -12,3 +12,19 @@ export const Priority = (s) => {
         default: return 100000;
     }
 }
+
+const cardsStatusComparator = (a,b) => {
+    const priorityA = Priority(a.status);
+    const priorityB = Priority(b.status);
+    return  priorityA > priorityB ? 1 : (priorityA < priorityB ? -1 : 0);
+  }
+
+export  const sortCards = (ownedStatus) => {
+    let status = []
+    for (let k in ownedStatus)
+    {
+      status.push({ 'id': k, 'status':ownedStatus   [k]});
+    }
+    status.sort(cardsStatusComparator);
+    return status;
+  }
