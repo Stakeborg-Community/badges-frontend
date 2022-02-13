@@ -1,13 +1,13 @@
 import { ethers } from "ethers";
-import SeniorityBadgev2 from "./utils/SeniorityBadge-v2.json";
+import SeniorityBadgev2 from "./json/SeniorityBadge-v2.json";
 import './App.css';
 import { useState, useEffect } from "react";
 
 import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer } from '@chakra-ui/react';
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
-import * as NFTOwnershipStatus from "./components/NFTOwnershipStatus";
-import Merkle from "./whitelisting/merkletree.js";
+import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
+import Merkle from "./components/merkletree.js";
 
 const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 const TOKEN_IDS = [0,1,2,3,4,69420]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
@@ -21,20 +21,17 @@ function App() {
   const [merkle, setMerkle] = useState(null);
 
   // Cards owned by the connected account
-  const [ownedCards, setOwnedCards] = useState([]);
-  // Cards which are whitelisted for the connected account and can be minted
-  const [mintableCards, setMintableCards] = useState([]);
-  // Cards which cannot be minted yet
-  const [nonMintableCards, setNonMintableCards] = useState([]);
+  const [cards, setCards] = useState([]);
 
   const mint = async (tokenId, setLoading) => {
     console.log("trying to mint: ", tokenId); 
     checkIfWalletIsConnected();
+    let nftTx;
+    let tx;
 
     try {
       const proof = merkle.getProof(currentAccount, tokenId);
-      let nftTx;
-
+      
       switch (tokenId) {
         case 0:
           nftTx = await connectedContract.mintBootstrapper(proof);
@@ -57,18 +54,24 @@ function App() {
       
 			console.log('Minting....', nftTx.hash);
       setLoading(true);
-      
-      let tx = await nftTx.wait();
-      console.log('Minted!', tx);
-        
+    } catch (error) {
+      alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
+      return;
+    } 
+
+
+    try{    
+      tx = await nftTx.wait();
+      console.log('Minted!', tx);  
     } catch (error) {
       console.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
-      alert(error.data.message);
+      alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
     }
     finally {
       getCardsOwned();
     }
-  }
+  
+}
 
   useEffect( () => {
     new Merkle().then((result) => setMerkle(result));
@@ -87,40 +90,38 @@ function App() {
     }
   }, [cardsOwnedStatus]);  
 
+  const cardsStatusComparator = (a,b) => {
+    const priorityA = NFTOwnershipStatus.Priority(a.status);
+    const priorityB = NFTOwnershipStatus.Priority(b.status);
+    return  priorityA > priorityB ? 1 : (priorityA < priorityB ? -1 : 0);
+  }
+
+  const sortCards = (ownedStatus) => {
+    let status = []
+    for (let k in cardsOwnedStatus)
+    {
+      status.push({ 'id': k, 'status':cardsOwnedStatus[k]});
+    }
+    status.sort(cardsStatusComparator);
+    return status;
+  }
+
   const updateNFTArrays = () => {
-    let ownedCardsArray = [];
-    let nonMintableCardsArray = [];
-    let mintableCardsArray = [];
-
-    for (let i=0; i<TOKEN_IDS.length; i++) {
-      let id = TOKEN_IDS[i];
-      let nftComponent = <NFT key={id} tokenId={id} ownedStatus={cardsOwnedStatus[id]} mintingFn={mint}></NFT>;
-      switch (cardsOwnedStatus[id]) {
-        case NFTOwnershipStatus.Owned:
-          ownedCardsArray.push(nftComponent);
-          break;
-
-        case NFTOwnershipStatus.Mintable:
-          mintableCardsArray.push(nftComponent);
-          break;
-          
-        case NFTOwnershipStatus.NonMintable:
-          nonMintableCardsArray.push(nftComponent);
-          break;
-        
-        default:
-          break;
-      }
+    let cardsArray = [];
+    let sortedCardsStatus = sortCards(cardsOwnedStatus);
+    for (let i=0; i<sortedCardsStatus.length; i++) {
+      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint}></NFT>;
+      cardsArray.push(nftComponent);
     }
     console.log("Create nft arrays");
-    setOwnedCards(ownedCardsArray);
-    setMintableCards(mintableCardsArray);
-    setNonMintableCards(nonMintableCardsArray);
+    setCards(cardsArray);
   }
 
   const getCardsOwned = async () => {
-    console.log('Contract instance:');
+    console.groupCollapsed('Contract instance');
     console.log(connectedContract);
+    console.groupEnd();
+    console.groupCollapsed('Owned tokens');
     let ownedstatus = {};
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
@@ -128,7 +129,7 @@ function App() {
       
       try {
         const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log(`Owned token ${id}: ${balance.toString()}`);
+        console.log(`${id}: ${balance.toString()}`);
         if (balance.toString() !== "0") {
           ownedstatus[id] = NFTOwnershipStatus.Owned;
         } 
@@ -141,16 +142,17 @@ function App() {
       } catch (error) {
         console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
         console.error(error);
+        console.groupEnd();
         return;
       }
-    }  
+    }
+    console.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
   }   
 
 
   const checkIfWalletIsConnected = async () => {
     const {ethereum} = window;
-  
     if (!ethereum) {
       console.log("Make sure you have metamask");
       return;
@@ -166,7 +168,7 @@ function App() {
       console.log("Found authorized account:", account);
       setCurrentAccount(account);
     }
-
+    
     // Connect to contract
     const provider = new ethers.providers.Web3Provider(ethereum);
     const signer = provider.getSigner();
@@ -248,9 +250,7 @@ function App() {
 
     <Container maxW='container.xl' className="badge-container">
           <SimpleGrid minChildWidth='220px' spacing='30px'>
-            {ownedCards}
-            {mintableCards}
-            {nonMintableCards}
+            {cards}
           </SimpleGrid>
     </Container>
   );

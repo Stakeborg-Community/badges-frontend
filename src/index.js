@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import bg_blur from './resources/img/bg_blur.png'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from '@web3-ui/components';
 import { extendTheme } from "@chakra-ui/react"
 
-const theme = extendTheme({
+const customTheme = extendTheme({
   fonts: {
     heading: 'HeadingFont',
     body: 'BodyFont'
@@ -16,17 +17,28 @@ const theme = extendTheme({
     Modal: {
       baseStyle: (props) => ({
         dialog: {
-          bg: 'rgba(0, 0, 0, 0.0)'
+          bg: 'rgba(0, 0, 0, 0.0)',
+          shadow: 'none'
         }
       })
     }
-  }
+  },
+  styles: {
+    global: (props) => ({
+      body: {
+        backgroundImage: bg_blur,
+        backgroundPosition: 'no-repeat',
+        backgroundAttachement: 'fixed',
+        backgroundSize: 'cover'
+      }
+    })
+  },
 })
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider theme={theme}>
+    <Provider theme={customTheme}>
       <App />
     </Provider>
   </React.StrictMode>,

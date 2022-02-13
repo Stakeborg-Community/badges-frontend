@@ -12,11 +12,3 @@
 }
 
 
-body {
-  background-image: url("bg_blur.png") !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-  background-size: cover !important;
-}
-
-

@@ -3,7 +3,7 @@
     font-style: normal;
     font-weight: 700;
     font-display: swap;
-    src: local('Bodyfont'),url('./fonts/futura/FuturaLTProBook.otf') format('otf'), url('./fonts/futura/FuturaLTProBook.ttf') format('ttf'), url('./fonts/futura/FuturaLTProBook.woff2') format('woff2');
+    src: local('Bodyfont'),url('./resources/fonts/futura/FuturaLTProBook.otf') format('otf'), url('./resources/fonts/futura/FuturaLTProBook.ttf') format('ttf'), url('./resources/fonts/futura/FuturaLTProBook.woff2') format('woff2');
   }
 
   @font-face {
@@ -11,5 +11,5 @@
     font-style: normal;
     font-weight: 400;
     font-display: swap;
-    src: local('HeadingFont'),url('./fonts/futura/FuturaLTProHeavy.otf') format('otf'), url('./fonts/futura/FuturaLTProHeavy.ttf') format('ttf'), url('./fonts/futura/FuturaLTProHeavy.woff2') format('woff2');
+    src: local('HeadingFont'),url('./resources/fonts/futura/FuturaLTProHeavy.otf') format('otf'), url('./resources/fonts/futura/FuturaLTProHeavy.ttf') format('ttf'), url('./resources/fonts/futura/FuturaLTProHeavy.woff2') format('woff2');
   }

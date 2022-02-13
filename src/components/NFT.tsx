@@ -1,5 +1,5 @@
 import "./NFT.css";
-import * as NFTOwnershipStatus from "../components/NFTOwnershipStatus";
+import * as NFTOwnershipStatus from "../enums/NFTOwnershipStatus.js";
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Button,
@@ -140,7 +140,7 @@ export const NFTCard = ({
     );
   }
 
-  let imageClasses = ownedStatus?.description;
+  let commonImageClasses = ownedStatus?.description;
   let button;
   if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
   {
@@ -148,15 +148,17 @@ export const NFTCard = ({
               Mint
             </Button>;
   }
-  const image = <Image className={imageClasses}  src={data?.image_lg} borderRadius="lg" w={size} loading="lazy" />;
+  const image = <Image className={commonImageClasses  + ' hoverglow'}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
+  const imageModal = <Image className={commonImageClasses}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
 
 
 
-  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom variant="transparent">
+
+  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom>
         <ModalOverlay/>
         <ModalContent>
           <ModalBody>
-            {image}
+            {imageModal}
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -165,7 +167,7 @@ export const NFTCard = ({
       <Box maxW={size} borderRadius='lg' >
         
         <a href="#" onClick={onOpen}>
-          {image}
+          {imageModal}
           {modal}
         </a>
 
