@@ -21,11 +21,7 @@ function App() {
   const [merkle, setMerkle] = useState(null);
 
   // Cards owned by the connected account
-  const [ownedCards, setOwnedCards] = useState([]);
-  // Cards which are whitelisted for the connected account and can be minted
-  const [mintableCards, setMintableCards] = useState([]);
-  // Cards which cannot be minted yet
-  const [nonMintableCards, setNonMintableCards] = useState([]);
+  const [cards, setCards] = useState([]);
 
   const mint = async (tokenId, setLoading) => {
     console.log("trying to mint: ", tokenId); 
@@ -94,35 +90,31 @@ function App() {
     }
   }, [cardsOwnedStatus]);  
 
+  const cardsStatusComparator = (a,b) => {
+    const priorityA = NFTOwnershipStatus.Priority(a.status);
+    const priorityB = NFTOwnershipStatus.Priority(b.status);
+    return  priorityA > priorityB ? 1 : (priorityA < priorityB ? -1 : 0);
+  }
+
+  const sortCards = (ownedStatus) => {
+    let status = []
+    for (let k in cardsOwnedStatus)
+    {
+      status.push({ 'id': k, 'status':cardsOwnedStatus[k]});
+    }
+    status.sort(cardsStatusComparator);
+    return status;
+  }
+
   const updateNFTArrays = () => {
-    let ownedCardsArray = [];
-    let nonMintableCardsArray = [];
-    let mintableCardsArray = [];
-
-    for (let i=0; i<TOKEN_IDS.length; i++) {
-      let id = TOKEN_IDS[i];
-      let nftComponent = <NFT key={id} tokenId={id} ownedStatus={cardsOwnedStatus[id]} mintingFn={mint}></NFT>;
-      switch (cardsOwnedStatus[id]) {
-        case NFTOwnershipStatus.Owned:
-          ownedCardsArray.push(nftComponent);
-          break;
-
-        case NFTOwnershipStatus.Mintable:
-          mintableCardsArray.push(nftComponent);
-          break;
-          
-        case NFTOwnershipStatus.NonMintable:
-          nonMintableCardsArray.push(nftComponent);
-          break;
-        
-        default:
-          break;
-      }
+    let cardsArray = [];
+    let sortedCardsStatus = sortCards(cardsOwnedStatus);
+    for (let i=0; i<sortedCardsStatus.length; i++) {
+      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint}></NFT>;
+      cardsArray.push(nftComponent);
     }
     console.log("Create nft arrays");
-    setOwnedCards(ownedCardsArray);
-    setMintableCards(mintableCardsArray);
-    setNonMintableCards(nonMintableCardsArray);
+    setCards(cardsArray);
   }
 
   const getCardsOwned = async () => {
@@ -258,9 +250,7 @@ function App() {
 
     <Container maxW='container.xl' className="badge-container">
           <SimpleGrid minChildWidth='220px' spacing='30px'>
-            {ownedCards}
-            {mintableCards}
-            {nonMintableCards}
+            {cards}
           </SimpleGrid>
     </Container>
   );
