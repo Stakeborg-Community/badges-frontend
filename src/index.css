@@ -1,1 +1,15 @@
+@font-face {
+    font-family: 'Bodyfont';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: local('Bodyfont'),url('./resources/fonts/futura/FuturaLTProBook.otf') format('otf'), url('./resources/fonts/futura/FuturaLTProBook.ttf') format('ttf'), url('./resources/fonts/futura/FuturaLTProBook.woff2') format('woff2');
+  }
 
+  @font-face {
+    font-family: 'HeadingFont';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: local('HeadingFont'),url('./resources/fonts/futura/FuturaLTProHeavy.otf') format('otf'), url('./resources/fonts/futura/FuturaLTProHeavy.ttf') format('ttf'), url('./resources/fonts/futura/FuturaLTProHeavy.woff2') format('woff2');
+  }

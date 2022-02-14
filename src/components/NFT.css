@@ -1,5 +1,5 @@
 .OWNED {
-    
+    filter: saturate(1.1) contrast(1.1)
 }
 
 .OWNED:hover {
@@ -11,7 +11,7 @@
 }
 
 .NON_MINTABLE:hover {
-    filter: grayscale(40%);
+    filter: grayscale(0%);
 }
 
 
@@ -20,5 +20,12 @@
 }
 
 .MINTABLE:hover {
-    filter: grayscale(40%);
+    filter: grayscale(0%);
+}
+
+.hoverglow {
+    box-shadow:none;
+  }
+.hoverglow:hover, .hoverglow:active {
+    box-shadow: 0 0 2px #ffd50077, inset 0 0 5px #ffd000;
 }

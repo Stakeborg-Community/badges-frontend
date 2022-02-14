@@ -1,5 +1,5 @@
 import "./NFT.css";
-import * as NFTOwnershipStatus from "../components/NFTOwnershipStatus";
+import * as NFTOwnershipStatus from "../enums/NFTOwnershipStatus.js";
 import React, { useCallback, useEffect, useRef } from 'react';
 import {
   Button,
@@ -8,10 +8,13 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
-import {  
-  CopyIcon
-} from '@chakra-ui/icons';
-
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  useDisclosure 
+} from '@chakra-ui/react'
 
 
 export interface NFTProps {
@@ -35,7 +38,9 @@ export interface NFTProps {
 
 export interface NFTData {
   tokenId: string;
-  imageUrl?: string;
+  image_svg?: string;
+  image_lg?: string;
+  image_sm?: string;
   name: string | null;
   description: string;
   ownedStatus: Symbol;
@@ -47,11 +52,12 @@ export interface NFTData {
 export const NFT = (props: NFTProps) => {
   const _isMounted = useRef(true);
   const [nftData, setNftData] = React.useState<NFTData>();
+  const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string>();
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/QmbjoafeN3Xr1bjeyP4xEKtr2CAWWXxekq1PCY3rKv3esA/" + props.tokenId + ".json");
+      const res = await fetch("https://ipfs.io/ipfs/Qmc2qn27xNCv4RbTw5kpgA1tbogaZ5QY6MLf5uyMDUZTWW/" + props.tokenId + ".json");
           
       if (!res.ok) {
         throw Error(
@@ -62,7 +68,9 @@ export const NFT = (props: NFTProps) => {
       if (_isMounted.current) {
         setNftData({
           tokenId: props.tokenId,
-          imageUrl: data.image,
+          image_svg:  data['image_svg'],
+          image_lg: data['image_lg'],
+          image_sm: data['image_sm'],
           name: data.name,
           description: data.description,
           ownedStatus: props.ownedStatus
@@ -84,9 +92,9 @@ export const NFT = (props: NFTProps) => {
     return () => {
       _isMounted.current = false;
     };
-  }, [props.ownedStatus]);
+  }, [props.ownedStatus, loading]);
 
-  return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} />;
+  return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} loading={loading} setLoading={setLoading}/>;
 };
 
 /**
@@ -97,23 +105,28 @@ export const NFTCard = ({
   errorMessage = '',
   size = 'lg',
   mintingFn,
+  loading,
+  setLoading
 }: {
   data: NFTData | undefined | null;
   errorMessage?: string | undefined;
   size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
   mintingFn: Function;
+  loading: boolean;
+  setLoading: Function;
 }) => {
   const name = data?.name;
-  const imageUrl = data?.imageUrl;
   const description = data?.description;
   const ownedStatus = data?.ownedStatus;
   const tokenId = data?.tokenId;
   const displayName = name;
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const mint = () =>
   {
-    mintingFn(tokenId);
+    mintingFn(tokenId, setLoading);
   }
+
 
   if (errorMessage) {
     return (
@@ -124,19 +137,39 @@ export const NFTCard = ({
     );
   }
 
-  let imageClasses = ownedStatus?.description;
+  let commonImageClasses = ownedStatus?.description;
   let button;
-  if (ownedStatus !== NFTOwnershipStatus.Owned)
+  if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
   {
-    button = <Button color='white' backgroundColor='#0c8af2' variant='solid' onClick={mint} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable} >
+    button = <Button color='white' className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
               Mint
             </Button>;
   }
+  const image = <Image className={commonImageClasses  + ' hoverglow'}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
+  const imageModal = <Image className={commonImageClasses}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
+
+
+
+
+  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom>
+        <ModalOverlay/>
+        <ModalContent>
+          <ModalBody>
+            {imageModal}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
   return (
-      <Box maxW={size} borderRadius='lg' overflow="hidden" boxShadow='0px 0px 0px yellow' >
-        <a href="#"><Image className={imageClasses}  src={imageUrl} borderRadius="lg" w={size} /></a>
+      <Box maxW={size} borderRadius='lg' >
+        
+        <a href="#" onClick={onOpen}>
+          {imageModal}
+          {modal}
+        </a>
+
         {button}
+        
       </Box>
 
   );
