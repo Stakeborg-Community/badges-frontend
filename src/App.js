@@ -1,5 +1,4 @@
-import { ethers } from "ethers";
-import SeniorityBadgev2 from "./json/SeniorityBadge-v2.json";
+
 import './App.css';
 import { useState, useEffect } from "react";
 
@@ -7,9 +6,9 @@ import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer } from '@chak
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
+import * as wallet from "./components/wallet.js";
 import Merkle from "./components/merkletree.js";
 
-const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 const TOKEN_IDS = [0,1,2,3,4,69420]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
 
 
@@ -23,14 +22,44 @@ function App() {
   // Cards owned by the connected account
   const [cards, setCards] = useState([]);
 
+
+  // Helper middleware function
+  const checkWalletConnection = async () =>
+  {
+    await wallet.checkIfWalletIsConnected(setCurrentAccount,setConnectedContract);
+  }
+
+  // Initialise merkle trees and do wallet connection
+  useEffect( () => {
+    new Merkle().then((result) => setMerkle(result));
+    checkWalletConnection();
+  }, []);
+
+
+  // Trigget getting of badges owned only when both the contract and merkel instance has been initialised
+  useEffect(() => {
+    if (connectedContract !== null && merkle !== null && currentAccount != "") {
+      getCardsOwned();
+    }
+  }, [connectedContract, currentAccount, merkle])
+
+
+  // Trigger the creation of the badges for rendering only after the ownership of the badges has been decided
+  useEffect( () => {
+    if (cardsOwnedStatus !== null) {
+      updateNFTArray();
+    }
+  }, [cardsOwnedStatus]);   
+  
+
   const mint = async (tokenId, setLoading) => {
     console.log("trying to mint: ", tokenId); 
-    checkIfWalletIsConnected();
+    await checkWalletConnection();
     let nftTx;
     let tx;
 
     try {
-      const proof = merkle.getProof(currentAccount, tokenId);
+      const proof = merkle.getHexProof(currentAccount, tokenId);
       
       switch (tokenId) {
         case 0:
@@ -72,43 +101,12 @@ function App() {
     }
   
 }
+  
+ 
 
-  useEffect( () => {
-    new Merkle().then((result) => setMerkle(result));
-    checkIfWalletIsConnected();
-  }, []);
-
-  useEffect(() => {
-    if (connectedContract !== null && merkle !== null) {
-      getCardsOwned();
-    }
-  }, [connectedContract, merkle])
-
-  useEffect( () => {
-    if (cardsOwnedStatus !== null) {
-      updateNFTArrays();
-    }
-  }, [cardsOwnedStatus]);  
-
-  const cardsStatusComparator = (a,b) => {
-    const priorityA = NFTOwnershipStatus.Priority(a.status);
-    const priorityB = NFTOwnershipStatus.Priority(b.status);
-    return  priorityA > priorityB ? 1 : (priorityA < priorityB ? -1 : 0);
-  }
-
-  const sortCards = (ownedStatus) => {
-    let status = []
-    for (let k in cardsOwnedStatus)
-    {
-      status.push({ 'id': k, 'status':cardsOwnedStatus[k]});
-    }
-    status.sort(cardsStatusComparator);
-    return status;
-  }
-
-  const updateNFTArrays = () => {
+  const updateNFTArray = () => {
     let cardsArray = [];
-    let sortedCardsStatus = sortCards(cardsOwnedStatus);
+    let sortedCardsStatus = NFTOwnershipStatus.sortCards(cardsOwnedStatus);
     for (let i=0; i<sortedCardsStatus.length; i++) {
       let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint}></NFT>;
       cardsArray.push(nftComponent);
@@ -148,92 +146,14 @@ function App() {
     }
     console.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
-  }   
+  }    
 
-
-  const checkIfWalletIsConnected = async () => {
-    const {ethereum} = window;
-    if (!ethereum) {
-      console.log("Make sure you have metamask");
-      return;
-    } else {
-      console.log("We have the ethereum object", ethereum);
-    }
-    // Check if metamask is connected to Mumbai. Trigger network switch if not
-    await switchNetworkMumbai();
-    const accounts = await ethereum.request({method: 'eth_accounts'});
-
-    if (accounts.length !== 0) {
-      const account = accounts[0];
-      console.log("Found authorized account:", account);
-      setCurrentAccount(account);
-    }
-    
-    // Connect to contract
-    const provider = new ethers.providers.Web3Provider(ethereum);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS_V2, SeniorityBadgev2.abi, signer);
-    setConnectedContract(contract);
-  }
- 
-  
-
-
-  const connectWallet = async () => {
-    try {
-      const {ethereum} = window;
-      if ( !ethereum ) {
-        alert("Get Metamask!");
-        return;
-      }
-
-      await switchNetworkMumbai();
-
-      const accounts = await ethereum.request({method: "eth_requestAccounts"});
-      console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  const switchNetworkMumbai = async () => {
-    try {
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x13881" }],
-      });
-    } catch (error) {
-      if (error.code === 4902) {
-        try {
-          await window.ethereum.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: "0x13881",
-                chainName: "Mumbai",
-                rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
-                nativeCurrency: {
-                  name: "Matic",
-                  symbol: "Matic",
-                  decimals: 18,
-                },
-                blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"],
-              },
-            ],
-          });
-        } catch (error) {
-          alert(error.message);
-        }
-      }
-    }
-  };
 
   // Render this when the wallet is not connected
   const renderNotConnectedContainer = () => (
     <Container>
       <Button
-        onClick={connectWallet}
+        onClick={checkWalletConnection}
         size='md'
         height='48px'
         width='200px'
@@ -267,7 +187,7 @@ function App() {
         <Spacer />
         {currentAccount !== "" ? renderAddressContainer() : null}
       </Flex>
-      <Heading  className='cirlce pulse' size="2xl" m='50px' color='#0e126e' > Community Achievements </Heading>
+      <Heading  className='circle' size="2xl" m='50px' color='#0e126e' > Community Achievements </Heading>
       <div >
         {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
       </div>

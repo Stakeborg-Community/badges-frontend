@@ -54,7 +54,7 @@ export default class Merkle {
         return tree.getRoot().toString('hex');
     }
 
-    getProof(address, tokenId) {
+    getHexProof(address, tokenId) {
         const leaf = keccak256(address);
         const tree = this.getTree(tokenId);
         return tree.getHexProof(leaf)
