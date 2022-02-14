@@ -1,15 +1,15 @@
 import {MerkleTree} from "merkletreejs";
 import keccak256 from "keccak256";
-//import whitelist from "./whitelist.json";
+//import whitelist from "../json/whitelist.json";
 
 export default class Merkle {
 
-    constructor(whitelist) {
-        this.whitelist = whitelist;
+    constructor() {
+        //this.whitelist = whitelist;
         this.trees = [];
         return (async () => {
             try {      
-                const res = await fetch("https://ipfs.io/ipfs/QmRMnnU2gu8eVpo8UT6h6sPcih1nAAXQVyh7DyhzTxaxAs?filename=whitelist.json");
+                const res = await fetch("https://ipfs.io/ipfs/QmaLwggVBJhqSmQhdDPa4zipug8BHME3PV4JPVbsXxRBvN/whitelist.json");
                     
                 if (!res.ok) {
                   throw Error(
@@ -19,7 +19,7 @@ export default class Merkle {
                 const data = await res.json();
                 
                 console.log("Whitelist received", data);
-                this.whitelist = data;
+                //this.whitelist = data;
             } catch (error) {
                 console.error(error);
             }
