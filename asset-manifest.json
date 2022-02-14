@@ -1,22 +1,24 @@
 {
   "files": {
-    "main.css": "/badges-frontend/static/css/main.7bba2540.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.9325bd4b.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.9325bd4b.chunk.js.map",
-    "runtime-main.js": "/badges-frontend/static/js/runtime-main.ada33921.js",
-    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.ada33921.js.map",
-    "static/js/2.db86faa8.chunk.js": "/badges-frontend/static/js/2.db86faa8.chunk.js",
-    "static/js/2.db86faa8.chunk.js.map": "/badges-frontend/static/js/2.db86faa8.chunk.js.map",
-    "static/js/3.7ac67c21.chunk.js": "/badges-frontend/static/js/3.7ac67c21.chunk.js",
-    "static/js/3.7ac67c21.chunk.js.map": "/badges-frontend/static/js/3.7ac67c21.chunk.js.map",
+    "main.css": "/badges-frontend/static/css/main.5f3d8d6f.chunk.css",
+    "main.js": "/badges-frontend/static/js/main.dc7dd428.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.dc7dd428.chunk.js.map",
+    "runtime-main.js": "/badges-frontend/static/js/runtime-main.37dfdac4.js",
+    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.37dfdac4.js.map",
+    "static/js/2.345f8d7e.chunk.js": "/badges-frontend/static/js/2.345f8d7e.chunk.js",
+    "static/js/2.345f8d7e.chunk.js.map": "/badges-frontend/static/js/2.345f8d7e.chunk.js.map",
+    "static/js/3.106db24d.chunk.js": "/badges-frontend/static/js/3.106db24d.chunk.js",
+    "static/js/3.106db24d.chunk.js.map": "/badges-frontend/static/js/3.106db24d.chunk.js.map",
     "index.html": "/badges-frontend/index.html",
-    "static/css/main.7bba2540.chunk.css.map": "/badges-frontend/static/css/main.7bba2540.chunk.css.map",
-    "static/js/2.db86faa8.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.db86faa8.chunk.js.LICENSE.txt"
+    "static/css/main.5f3d8d6f.chunk.css.map": "/badges-frontend/static/css/main.5f3d8d6f.chunk.css.map",
+    "static/js/2.345f8d7e.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.345f8d7e.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/badges-frontend/static/media/FuturaLTProHeavy.8f9e6e63.ttf",
+    "static/media/bg_blur.8f1f3050.png": "/badges-frontend/static/media/bg_blur.8f1f3050.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.ada33921.js",
-    "static/js/2.db86faa8.chunk.js",
-    "static/css/main.7bba2540.chunk.css",
-    "static/js/main.9325bd4b.chunk.js"
+    "static/js/runtime-main.37dfdac4.js",
+    "static/js/2.345f8d7e.chunk.js",
+    "static/css/main.5f3d8d6f.chunk.css",
+    "static/js/main.dc7dd428.chunk.js"
   ]
 }
