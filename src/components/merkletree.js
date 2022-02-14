@@ -1,28 +1,28 @@
 import {MerkleTree} from "merkletreejs";
 import keccak256 from "keccak256";
-//import whitelist from "./whitelist.json";
+import whitelist from "../json/whitelist.json";
 
 export default class Merkle {
 
-    constructor(whitelist) {
+    constructor() {
         this.whitelist = whitelist;
         this.trees = [];
         return (async () => {
-            try {      
-                const res = await fetch("https://ipfs.io/ipfs/QmRMnnU2gu8eVpo8UT6h6sPcih1nAAXQVyh7DyhzTxaxAs?filename=whitelist.json");
+            // try {      
+            //     const res = await fetch("https://ipfs.io/ipfs/QmaLwggVBJhqSmQhdDPa4zipug8BHME3PV4JPVbsXxRBvN/whitelist.json");
                     
-                if (!res.ok) {
-                  throw Error(
-                    `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
-                  );
-                }
-                const data = await res.json();
+            //     if (!res.ok) {
+            //       throw Error(
+            //         `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
+            //       );
+            //     }
+            //     const data = await res.json();
                 
-                console.log("Whitelist received", data);
-                this.whitelist = data;
-            } catch (error) {
-                console.error(error);
-            }
+            //     console.log("Whitelist received", data);
+            //     this.whitelist = data;
+            // } catch (error) {
+            //     console.error(error);
+            // }
             console.groupCollapsed("Merkle root for all tokens:");
             for (let id in this.whitelist.tokenId)
             {
