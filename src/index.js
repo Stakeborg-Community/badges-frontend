@@ -28,7 +28,7 @@ const customTheme = extendTheme({
       body: {
         backgroundImage: bg_blur,
         backgroundPosition: 'no-repeat',
-        backgroundAttachement: 'fixed',
+        backgroundAttachment: 'fixed',
         backgroundSize: 'cover'
       }
     })
