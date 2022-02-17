@@ -27,7 +27,7 @@ class Plugin extends Singleton {
 		add_action( 'rest_api_init', array( $this, 'add_users_api_route' ) );
 
 		// Enable application passwords for api.
-		add_filter( 'wp_is_application_passwords_available', '__return_true' );
+		add_filter( 'wp_is_application_passwords_available', '__return_true', 9999 );
 
 	}
 
