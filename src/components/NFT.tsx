@@ -38,9 +38,7 @@ export interface NFTProps {
 
 export interface NFTData {
   tokenId: string;
-  image_svg?: string;
-  image_lg?: string;
-  image_sm?: string;
+  image?: string;
   name: string | null;
   description: string;
   ownedStatus: Symbol;
@@ -57,7 +55,7 @@ export const NFT = (props: NFTProps) => {
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/Qmc2qn27xNCv4RbTw5kpgA1tbogaZ5QY6MLf5uyMDUZTWW/" + props.tokenId + ".json");
+      const res = await fetch("https://ipfs.io/ipfs/QmUn1h9BxgA7vshmuC6VGdq9mjLAbvctJNVAcXUWsaxuww/" + props.tokenId + ".json");
           
       if (!res.ok) {
         throw Error(
@@ -68,9 +66,7 @@ export const NFT = (props: NFTProps) => {
       if (_isMounted.current) {
         setNftData({
           tokenId: props.tokenId,
-          image_svg:  data['image_svg'],
-          image_lg: data['image_lg'],
-          image_sm: data['image_sm'],
+          image: data.image,
           name: data.name,
           description: data.description,
           ownedStatus: props.ownedStatus
@@ -141,12 +137,14 @@ export const NFTCard = ({
   let button;
   if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
   {
-    button = <Button color='white' className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
+    button = <Button color='white' my="3" className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
               Mint
             </Button>;
   }
-  const image = <Image className={commonImageClasses  + ' hoverglow'}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
-  const imageModal = <Image className={commonImageClasses}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
+  const image = <Image className={commonImageClasses  + ' hoverglow'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy" boxShadow='2xl'/>;
+  //const imageReflected = <Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/>;
+
+  const imageModal = <Image className={commonImageClasses}  src={data?.image} borderRadius="2xl" w={size} loading="lazy" boxShadow='2xl' />;
 
 
 
@@ -164,7 +162,7 @@ export const NFTCard = ({
       <Box maxW={size} borderRadius='lg' >
         
         <a href="#" onClick={onOpen}>
-          {imageModal}
+          {image}
           {modal}
         </a>
 

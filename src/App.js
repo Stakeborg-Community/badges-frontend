@@ -9,7 +9,8 @@ import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
 import * as wallet from "./components/wallet.js";
 import Merkle from "./components/merkletree.js";
 
-const TOKEN_IDS = [0,1,2,3,4,69420]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
+const TOKEN_IDS = [0,1,2,3,4,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
+const axios = require('axios');
 
 
 function App() {
@@ -115,34 +116,58 @@ function App() {
     setCards(cardsArray);
   }
 
+
+  const getMetadataFromIpfs = async (tokenURI) => {
+    let metadata = await axios.get(tokenURI)
+    return metadata.data
+  }
+
   const getCardsOwned = async () => {
     console.groupCollapsed('Contract instance');
     console.log(connectedContract);
     console.groupEnd();
     console.groupCollapsed('Owned tokens');
+
+
+    let numberOfNfts = TOKEN_IDS.length
+    // Pt. a nu apela blockchain-ul in for loop si a fi mai rapid si mai eficient
+    let tempMetadata = {} 
+    let baseUrl = ""
+
+    try {
+      let reqAccounts = Array(TOKEN_IDS.length).fill(currentAccount)
+      let copies = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
+      for (let i = 0; i < TOKEN_IDS.length; i++) {
+        if (i == 0) { 
+          let tokenURI = await connectedContract.uri(i)
+          baseUrl = tokenURI.replace(/{id}.json/, "")  // reg. expr. pt a extrege baseUrl: de ex. din "ipfs.com/CID/1.json" devine "ipfs.com/CID/"
+        } 
+        let id = TOKEN_IDS[i];
+        let metadata = await getMetadataFromIpfs(baseUrl + `${id}.json`)
+        metadata.copies = parseInt(copies[i])
+        tempMetadata[id] = metadata     
+      }
+    } catch (error) {
+      console.error(`Failed to get balance of tokens for address ${currentAccount} or did not found metadata for the token.`);
+      console.error(error);
+      console.groupEnd();
+      return;
+    }
+
+
     let ownedstatus = {};
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
       const whitelisted = merkle.isWhitelisted(currentAccount, id);
       
-      try {
-        const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log(`${id}: ${balance.toString()}`);
-        if (balance.toString() !== "0") {
-          ownedstatus[id] = NFTOwnershipStatus.Owned;
-        } 
-        else if (whitelisted) {
-          ownedstatus[id] = NFTOwnershipStatus.Mintable;
-        } else {
-          ownedstatus[id] = NFTOwnershipStatus.NonMintable;
-        }
-      
-      } catch (error) {
-        console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
-        console.error(error);
-        console.groupEnd();
-        return;
-      }
+      if (tempMetadata[id].copies !== 0) {
+        ownedstatus[id] = NFTOwnershipStatus.Owned;
+      } 
+      else if (whitelisted) {
+        ownedstatus[id] = NFTOwnershipStatus.Mintable;
+      } else {
+        ownedstatus[id] = NFTOwnershipStatus.NonMintable;
+      }       
     }
     console.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
@@ -187,7 +212,8 @@ function App() {
         <Spacer />
         {currentAccount !== "" ? renderAddressContainer() : null}
       </Flex>
-      <Heading  className='circle' size="2xl" m='50px' color='#0e126e' > Community Achievements </Heading>
+      <Heading size="xl" m='30px' color='#0e126e' isTruncated >  Stakeborg Community Achievements </Heading>
+      <Heading size="lg" mb='30px' color='gray.700' isTruncated >   One for All and All for DAO </Heading>
       <div >
         {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
       </div>
