@@ -79,7 +79,7 @@ function App() {
     try {
       const proof = merkle.getHexProof(currentAccount, tokenId);
       
-      switch (tokenId) {
+      switch (parseInt(tokenId)) {
         case 0:
           nftTx = await connectedContract.mintBootstrapper(proof);
           break;
