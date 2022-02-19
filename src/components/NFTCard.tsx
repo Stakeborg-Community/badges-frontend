@@ -18,7 +18,9 @@ import {
   AccordionButton,
   AccordionIcon,
   AccordionItem,
-  AccordionPanel
+  AccordionPanel,
+  Center,
+  Divider
 } from '@chakra-ui/react';
 import {
   Modal,  
@@ -102,7 +104,8 @@ export interface NFTData {
                         backdropFilter='auto'
                         backdropBlur='10px'/>
           <ModalContent>
-            <ModalHeader textAlign={'center'} fontWeight='900' lineHeight='tight'> <Heading as='h1' size='xl'>{name}</Heading></ModalHeader>
+            <ModalHeader textAlign={'center'} fontWeight='900' lineHeight='tight'> <Heading as='h1' size='xl' >{name} </Heading><Divider w='50%' mx='25%'/></ModalHeader>
+              
             <ModalCloseButton />
             <ModalBody mb='3'>
                 <Grid templateRows='repeat(1, 1fr)' templateColumns='repeat(2, 1fr)'gap={5}>
