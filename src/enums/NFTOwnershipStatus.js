@@ -6,8 +6,8 @@ export const Unknown = Symbol("UNKNOWN");
 export const Priority = (s) => { 
     switch (s) {
         case Owned: return 0;
-        case Mintable: return 1;
-        case NonMintable: return 2;
+        case Mintable: return 0;
+        case NonMintable: return 0;
         case Unknown: return 999;
         default: return 100000;
     }
@@ -23,7 +23,7 @@ export  const sortCards = (ownedStatus) => {
     let status = []
     for (let k in ownedStatus)
     {
-      status.push({ 'id': k, 'status':ownedStatus   [k]});
+      status.push({ 'id': k, 'status':ownedStatus[k]});
     }
     status.sort(cardsStatusComparator);
     return status;

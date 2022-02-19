@@ -17,7 +17,7 @@ const customTheme = extendTheme({
     Modal: {
       baseStyle: (props) => ({
         dialog: {
-          bg: 'rgba(200, 200, 200, 0.7)',
+          bg: 'rgba(200, 200, 200, 0.8)',
           //shadow: 'none'
         }
       }),
