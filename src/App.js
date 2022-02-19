@@ -1,15 +1,29 @@
 
 import './App.css';
 import { useState, useEffect } from "react";
-
-import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer } from '@chakra-ui/react';
+import {
+  Modal,
+  ModalContent,
+  ModalBody,
+  ModalOverlay,
+  useDisclosure 
+} from '@chakra-ui/react'
+import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
+import { AttachmentIcon, InfoIcon } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
 import * as wallet from "./components/wallet.js";
 import Merkle from "./components/merkletree.js";
+import brochure from "./resources/pdf/Brochure2.pdf"
+import mvpen from "./resources/pdf/MVP_EN.pdf"
+import mvpro from "./resources/pdf/MVP_RO.pdf"
+import ReactCountryFlag from "react-country-flag"
 
-const TOKEN_IDS = [0,1,2,3,4,69420]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
+const Logo = require('./resources/img/sbdao.png')
+const TOKEN_IDS = [0,1,2,3,4,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
+
+
 
 
 function App() {
@@ -18,9 +32,13 @@ function App() {
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
   const [merkle, setMerkle] = useState(null);
-
+  const [baseUri, setBaseUri] = useState(null);
   // Cards owned by the connected account
   const [cards, setCards] = useState([]);
+
+
+  const [selectedPdf, setSelectedPdf] = useState(null)
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
 
   // Helper middleware function
@@ -108,41 +126,53 @@ function App() {
     let cardsArray = [];
     let sortedCardsStatus = NFTOwnershipStatus.sortCards(cardsOwnedStatus);
     for (let i=0; i<sortedCardsStatus.length; i++) {
-      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint}></NFT>;
+      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint} baseUri={baseUri}></NFT>;
       cardsArray.push(nftComponent);
     }
     console.log("Create nft arrays");
     setCards(cardsArray);
   }
 
+
+  
+
   const getCardsOwned = async () => {
     console.groupCollapsed('Contract instance');
     console.log(connectedContract);
     console.groupEnd();
     console.groupCollapsed('Owned tokens');
+
+
+    // Pt. a nu apela blockchain-ul in for loop si a fi mai rapid si mai eficient
+    let copies = []
+
+    try {
+      let reqAccounts = Array(TOKEN_IDS.length).fill(currentAccount)
+      copies = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
+      console.log(copies)
+      let tokenURI = await connectedContract.uri(0)
+      setBaseUri(tokenURI.replace(/{id}.json/, ""))  // reg. expr. pt a extrege baseUrl: de ex. din "ipfs.com/CID/1.json" devine "ipfs.com/CID/"
+    } catch (error) {
+      console.error(`Failed to get balance of tokens for address ${currentAccount}.`);
+      console.error(error);
+      console.groupEnd();
+      return;
+    }
+
+
     let ownedstatus = {};
     for (let i=0; i<TOKEN_IDS.length; i++) {
       const id = TOKEN_IDS[i];
       const whitelisted = merkle.isWhitelisted(currentAccount, id);
       
-      try {
-        const balance = await connectedContract.balanceOf(currentAccount, id)
-        console.log(`${id}: ${balance.toString()}`);
-        if (balance.toString() !== "0") {
-          ownedstatus[id] = NFTOwnershipStatus.Owned;
-        } 
-        else if (whitelisted) {
-          ownedstatus[id] = NFTOwnershipStatus.Mintable;
-        } else {
-          ownedstatus[id] = NFTOwnershipStatus.NonMintable;
-        }
-      
-      } catch (error) {
-        console.error(`Failed to get balance of token ${id} for address ${currentAccount}`);
-        console.error(error);
-        console.groupEnd();
-        return;
-      }
+      if (parseInt(copies[i]) !== 0) {
+        ownedstatus[id] = NFTOwnershipStatus.Owned;
+      } 
+      else if (whitelisted) {
+        ownedstatus[id] = NFTOwnershipStatus.Mintable;
+      } else {
+        ownedstatus[id] = NFTOwnershipStatus.NonMintable;
+      }       
     }
     console.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
@@ -169,7 +199,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='220px' spacing='30px'>
+          <SimpleGrid minChildWidth='190px' spacing='30px'>
             {cards}
           </SimpleGrid>
     </Container>
@@ -181,17 +211,50 @@ function App() {
     </Box>
   )
 
+  const showPdf = (pdf) =>
+  {
+    setSelectedPdf(pdf);
+    onOpen();
+  }
+
   return (
     <div className="App">
-      <Flex>
-        <Spacer />
-        {currentAccount !== "" ? renderAddressContainer() : null}
-      </Flex>
-      <Heading  className='circle' size="2xl" m='50px' color='#0e126e' > Community Achievements </Heading>
-      <div >
-        {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
-      </div>
-     
+      <Modal isOpen={isOpen} onClose={onClose} min-height='200px' min-width='300px' size='5xl' isCentered motionPreset="scale" scrollBehavior="outside" allowPinchZoom>
+        <ModalOverlay bg='blackAlpha.600'
+                        backdropFilter='auto'
+                        backdropBlur='10px'/>
+        <ModalContent>
+              <AspectRatio ratio={4/3}>
+                <iframe src={selectedPdf}/>
+              </AspectRatio> 
+        </ModalContent>
+      </Modal>
+
+      <Container maxW='container.xl' pb='3'>
+        <Flex flexWrap={'wrap'}>
+        <Button mx='2' onClick={() => showPdf(brochure)} colorScheme='blue' leftIcon={<InfoIcon/>} variant={'ghost'}>Brochure</Button>
+
+          <ButtonGroup isAttached variant={'ghost'} colorScheme='blue'>
+            <Button onClick={() => showPdf(mvpen)} aria-label="EN Version" fontSize={'lg'} >Mission, Vission and Pillars |&nbsp; <ReactCountryFlag countryCode="GB" svg title='GB'/></Button>
+            <Button onClick={() => showPdf(mvpro)} aria-label='RO Version' fontSize={'lg'} ><ReactCountryFlag countryCode="RO" title="RO" svg /></Button>
+          </ButtonGroup>
+          <Spacer />
+          {currentAccount !== "" ? renderAddressContainer() : null}
+        </Flex>
+        <Heading size="xl" m='30px' color='#0e126e' isTruncated >  Stakeborg Community Achievements </Heading>
+        <Heading size="lg" mb='30px' color='gray.700' fontStyle='italic' isTruncated >"One for All and All for DAO" </Heading>
+        <div >
+          {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
+        </div>
+      </Container>
+
+      <Container as="footer" role="contentinfo" py={{ base: '12', md: '16' }}>
+        <Stack spacing={{ base: '4', md: '5' }}>
+          <Text fontSize="sm" color="subtle" isTruncated>
+            &copy; {new Date().getFullYear()} Stakeborg DAO - Bring Web3.
+          </Text>
+        </Stack>
+      </Container>
     </div>
   );
 }
