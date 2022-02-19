@@ -17,11 +17,12 @@ const customTheme = extendTheme({
     Modal: {
       baseStyle: (props) => ({
         dialog: {
-          bg: 'rgba(0, 0, 0, 0.0)',
-          shadow: 'none'
+          bg: 'rgba(200, 200, 200, 0.7)',
+          //shadow: 'none'
         }
       })
     }
+    
   },
   styles: {
     global: (props) => ({
