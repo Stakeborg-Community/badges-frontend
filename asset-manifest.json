@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/badges-frontend/static/css/main.110be8a3.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.269bab63.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.269bab63.chunk.js.map",
+    "main.js": "/badges-frontend/static/js/main.04dbc251.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.04dbc251.chunk.js.map",
     "runtime-main.js": "/badges-frontend/static/js/runtime-main.a098d3d0.js",
     "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.a098d3d0.js.map",
-    "static/js/2.36099d0c.chunk.js": "/badges-frontend/static/js/2.36099d0c.chunk.js",
-    "static/js/2.36099d0c.chunk.js.map": "/badges-frontend/static/js/2.36099d0c.chunk.js.map",
+    "static/js/2.fc5b4686.chunk.js": "/badges-frontend/static/js/2.fc5b4686.chunk.js",
+    "static/js/2.fc5b4686.chunk.js.map": "/badges-frontend/static/js/2.fc5b4686.chunk.js.map",
     "static/js/3.ad26bd45.chunk.js": "/badges-frontend/static/js/3.ad26bd45.chunk.js",
     "static/js/3.ad26bd45.chunk.js.map": "/badges-frontend/static/js/3.ad26bd45.chunk.js.map",
     "index.html": "/badges-frontend/index.html",
     "static/css/main.110be8a3.chunk.css.map": "/badges-frontend/static/css/main.110be8a3.chunk.css.map",
-    "static/js/2.36099d0c.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.36099d0c.chunk.js.LICENSE.txt",
+    "static/js/2.fc5b4686.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.fc5b4686.chunk.js.LICENSE.txt",
     "static/media/Brochure2.5e81c514.pdf": "/badges-frontend/static/media/Brochure2.5e81c514.pdf",
     "static/media/index.css": "/badges-frontend/static/media/FuturaLTProHeavy.8f9e6e63.ttf",
     "static/media/MVP_EN.c556cd65.pdf": "/badges-frontend/static/media/MVP_EN.c556cd65.pdf",
@@ -21,8 +21,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.a098d3d0.js",
-    "static/js/2.36099d0c.chunk.js",
+    "static/js/2.fc5b4686.chunk.js",
     "static/css/main.110be8a3.chunk.css",
-    "static/js/main.269bab63.chunk.js"
+    "static/js/main.04dbc251.chunk.js"
   ]
 }
