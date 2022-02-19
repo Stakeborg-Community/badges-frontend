@@ -138,7 +138,7 @@ export interface NFTData {
                                       <Text> {attribute.trait_type}: {attribute.value}</Text>
                                       
                                       {attribute.max_value &&
-                                        <Progress colorScheme='green' size='md' hasStripe isAnimated value={attribute.value/attribute.max_value*100} /> 
+                                        <Progress colorScheme={'orange'} size='md' borderRadius={'4px'} hasStripe isAnimated value={attribute.value/attribute.max_value*100} /> 
                                       }
                               
                                     </Container>  

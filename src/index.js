@@ -22,7 +22,6 @@ const customTheme = extendTheme({
         }
       })
     }
-    
   },
   styles: {
     global: (props) => ({
