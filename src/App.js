@@ -110,12 +110,14 @@ function App() {
     try{    
       tx = await nftTx.wait();
       console.log('Minted!', tx);  
+      
     } catch (error) {
       console.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
       alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
     }
     finally {
-      getCardsOwned();
+      await getCardsOwned();
+      window.location.reload();
     }
   
 }
@@ -130,6 +132,7 @@ function App() {
       cardsArray.push(nftComponent);
     }
     console.log("Create nft arrays");
+    console.log(cardsArray);
     setCards(cardsArray);
   }
 
