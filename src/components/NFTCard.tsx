@@ -7,15 +7,10 @@ import {
   Alert,
   Text,
   AlertIcon,
-  ModalCloseButton,
-  ModalHeader,
   Progress,
   Container,
-  SimpleGrid,
   Grid,
   GridItem,
-  ModalFooter,
-  Stack,
   VStack,
   StackDivider,
   Heading,
@@ -26,7 +21,9 @@ import {
   AccordionPanel
 } from '@chakra-ui/react';
 import {
-  Modal,
+  Modal,  
+  ModalCloseButton,
+  ModalHeader,
   ModalOverlay,
   ModalContent,
   ModalBody,

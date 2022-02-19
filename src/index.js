@@ -20,7 +20,10 @@ const customTheme = extendTheme({
           bg: 'rgba(200, 200, 200, 0.7)',
           //shadow: 'none'
         }
-      })
+      }),
+      variants: {
+        
+      }
     }
   },
   styles: {

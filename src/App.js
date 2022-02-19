@@ -1,15 +1,30 @@
 
 import './App.css';
 import { useState, useEffect } from "react";
-import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
-import {FaGithub} from 'react-icons/fa'
+import {
+  Modal,
+  ModalContent,
+  ModalBody,
+  ModalOverlay,
+  useDisclosure 
+} from '@chakra-ui/react'
+import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
+import { AttachmentIcon, InfoIcon } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
 import * as wallet from "./components/wallet.js";
 import Merkle from "./components/merkletree.js";
+import brochure from "./resources/pdf/Brochure2.pdf"
+import mvpen from "./resources/pdf/MVP_EN.pdf"
+import mvpro from "./resources/pdf/MVP_RO.pdf"
+import ReactCountryFlag from "react-country-flag"
+
 const Logo = require('./resources/img/sbdao.png')
 const TOKEN_IDS = [0,1,2,3,4,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
+
+
+
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -20,6 +35,10 @@ function App() {
   const [baseUri, setBaseUri] = useState(null);
   // Cards owned by the connected account
   const [cards, setCards] = useState([]);
+
+
+  const [selectedPdf, setSelectedPdf] = useState(null)
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
 
   // Helper middleware function
@@ -192,10 +211,33 @@ function App() {
     </Box>
   )
 
+  const showPdf = (pdf) =>
+  {
+    setSelectedPdf(pdf);
+    onOpen();
+  }
+
   return (
     <div className="App">
+      <Modal isOpen={isOpen} onClose={onClose} min-height='200px' min-width='300px' size='5xl' isCentered motionPreset="scale" scrollBehavior="outside" allowPinchZoom>
+        <ModalOverlay bg='blackAlpha.600'
+                        backdropFilter='auto'
+                        backdropBlur='10px'/>
+        <ModalContent>
+              <AspectRatio ratio={4/3}>
+                <iframe src={selectedPdf}/>
+              </AspectRatio> 
+        </ModalContent>
+      </Modal>
+
       <Container maxW='container.xl' pb='3'>
-        <Flex>
+        <Flex flexWrap={'wrap'}>
+        <Button mx='2' onClick={() => showPdf(brochure)} colorScheme='blue' leftIcon={<InfoIcon/>} variant={'ghost'}>Brochure</Button>
+
+          <ButtonGroup isAttached variant={'ghost'} colorScheme='blue'>
+            <Button onClick={() => showPdf(mvpen)} aria-label="EN Version" fontSize={'lg'} >Mission, Vission and Pillars |&nbsp; <ReactCountryFlag countryCode="GB" svg title='GB'/></Button>
+            <Button onClick={() => showPdf(mvpro)} aria-label='RO Version' fontSize={'lg'} ><ReactCountryFlag countryCode="RO" title="RO" svg /></Button>
+          </ButtonGroup>
           <Spacer />
           {currentAccount !== "" ? renderAddressContainer() : null}
         </Flex>
