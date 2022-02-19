@@ -1,24 +1,28 @@
 {
   "files": {
-    "main.css": "/badges-frontend/static/css/main.5f3d8d6f.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.1e3618a0.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.1e3618a0.chunk.js.map",
-    "runtime-main.js": "/badges-frontend/static/js/runtime-main.a5cbc6bf.js",
-    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.a5cbc6bf.js.map",
-    "static/js/2.1d19649e.chunk.js": "/badges-frontend/static/js/2.1d19649e.chunk.js",
-    "static/js/2.1d19649e.chunk.js.map": "/badges-frontend/static/js/2.1d19649e.chunk.js.map",
-    "static/js/3.bad36c78.chunk.js": "/badges-frontend/static/js/3.bad36c78.chunk.js",
-    "static/js/3.bad36c78.chunk.js.map": "/badges-frontend/static/js/3.bad36c78.chunk.js.map",
+    "main.css": "/badges-frontend/static/css/main.110be8a3.chunk.css",
+    "main.js": "/badges-frontend/static/js/main.269bab63.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.269bab63.chunk.js.map",
+    "runtime-main.js": "/badges-frontend/static/js/runtime-main.a098d3d0.js",
+    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.a098d3d0.js.map",
+    "static/js/2.36099d0c.chunk.js": "/badges-frontend/static/js/2.36099d0c.chunk.js",
+    "static/js/2.36099d0c.chunk.js.map": "/badges-frontend/static/js/2.36099d0c.chunk.js.map",
+    "static/js/3.ad26bd45.chunk.js": "/badges-frontend/static/js/3.ad26bd45.chunk.js",
+    "static/js/3.ad26bd45.chunk.js.map": "/badges-frontend/static/js/3.ad26bd45.chunk.js.map",
     "index.html": "/badges-frontend/index.html",
-    "static/css/main.5f3d8d6f.chunk.css.map": "/badges-frontend/static/css/main.5f3d8d6f.chunk.css.map",
-    "static/js/2.1d19649e.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.1d19649e.chunk.js.LICENSE.txt",
+    "static/css/main.110be8a3.chunk.css.map": "/badges-frontend/static/css/main.110be8a3.chunk.css.map",
+    "static/js/2.36099d0c.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.36099d0c.chunk.js.LICENSE.txt",
+    "static/media/Brochure2.5e81c514.pdf": "/badges-frontend/static/media/Brochure2.5e81c514.pdf",
     "static/media/index.css": "/badges-frontend/static/media/FuturaLTProHeavy.8f9e6e63.ttf",
-    "static/media/bg_blur.8f1f3050.png": "/badges-frontend/static/media/bg_blur.8f1f3050.png"
+    "static/media/MVP_EN.c556cd65.pdf": "/badges-frontend/static/media/MVP_EN.c556cd65.pdf",
+    "static/media/MVP_RO.7842bab5.pdf": "/badges-frontend/static/media/MVP_RO.7842bab5.pdf",
+    "static/media/bg_blur.8f1f3050.png": "/badges-frontend/static/media/bg_blur.8f1f3050.png",
+    "static/media/sbdao.png": "/badges-frontend/static/media/sbdao.cdf577d9.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.a5cbc6bf.js",
-    "static/js/2.1d19649e.chunk.js",
-    "static/css/main.5f3d8d6f.chunk.css",
-    "static/js/main.1e3618a0.chunk.js"
+    "static/js/runtime-main.a098d3d0.js",
+    "static/js/2.36099d0c.chunk.js",
+    "static/css/main.110be8a3.chunk.css",
+    "static/js/main.269bab63.chunk.js"
   ]
 }
