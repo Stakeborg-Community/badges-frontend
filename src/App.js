@@ -1,17 +1,15 @@
 
 import './App.css';
 import { useState, useEffect } from "react";
-
-import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer } from '@chakra-ui/react';
+import { Container, SimpleGrid, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
+import {FaGithub} from 'react-icons/fa'
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
 import * as wallet from "./components/wallet.js";
 import Merkle from "./components/merkletree.js";
-
+const Logo = require('./resources/img/sbdao.png')
 const TOKEN_IDS = [0,1,2,3,4,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
-const axios = require('axios');
-
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -19,7 +17,7 @@ function App() {
   const [connectedContract, setConnectedContract] = useState(null);
   const [cardsOwnedStatus, setCardsOwnedStatus] = useState(null);
   const [merkle, setMerkle] = useState(null);
-
+  const [baseUri, setBaseUri] = useState(null);
   // Cards owned by the connected account
   const [cards, setCards] = useState([]);
 
@@ -109,7 +107,7 @@ function App() {
     let cardsArray = [];
     let sortedCardsStatus = NFTOwnershipStatus.sortCards(cardsOwnedStatus);
     for (let i=0; i<sortedCardsStatus.length; i++) {
-      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint}></NFT>;
+      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint} baseUri={baseUri}></NFT>;
       cardsArray.push(nftComponent);
     }
     console.log("Create nft arrays");
@@ -117,10 +115,7 @@ function App() {
   }
 
 
-  const getMetadataFromIpfs = async (tokenURI) => {
-    let metadata = await axios.get(tokenURI)
-    return metadata.data
-  }
+  
 
   const getCardsOwned = async () => {
     console.groupCollapsed('Contract instance');
@@ -129,26 +124,17 @@ function App() {
     console.groupCollapsed('Owned tokens');
 
 
-    let numberOfNfts = TOKEN_IDS.length
     // Pt. a nu apela blockchain-ul in for loop si a fi mai rapid si mai eficient
-    let tempMetadata = {} 
-    let baseUrl = ""
+    let copies = []
 
     try {
       let reqAccounts = Array(TOKEN_IDS.length).fill(currentAccount)
-      let copies = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
-      for (let i = 0; i < TOKEN_IDS.length; i++) {
-        if (i == 0) { 
-          let tokenURI = await connectedContract.uri(i)
-          baseUrl = tokenURI.replace(/{id}.json/, "")  // reg. expr. pt a extrege baseUrl: de ex. din "ipfs.com/CID/1.json" devine "ipfs.com/CID/"
-        } 
-        let id = TOKEN_IDS[i];
-        let metadata = await getMetadataFromIpfs(baseUrl + `${id}.json`)
-        metadata.copies = parseInt(copies[i])
-        tempMetadata[id] = metadata     
-      }
+      copies = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
+      console.log(copies)
+      let tokenURI = await connectedContract.uri(0)
+      setBaseUri(tokenURI.replace(/{id}.json/, ""))  // reg. expr. pt a extrege baseUrl: de ex. din "ipfs.com/CID/1.json" devine "ipfs.com/CID/"
     } catch (error) {
-      console.error(`Failed to get balance of tokens for address ${currentAccount} or did not found metadata for the token.`);
+      console.error(`Failed to get balance of tokens for address ${currentAccount}.`);
       console.error(error);
       console.groupEnd();
       return;
@@ -160,7 +146,7 @@ function App() {
       const id = TOKEN_IDS[i];
       const whitelisted = merkle.isWhitelisted(currentAccount, id);
       
-      if (tempMetadata[id].copies !== 0) {
+      if (parseInt(copies[i]) !== 0) {
         ownedstatus[id] = NFTOwnershipStatus.Owned;
       } 
       else if (whitelisted) {
@@ -194,7 +180,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='220px' spacing='30px'>
+          <SimpleGrid minChildWidth='190px' spacing='30px'>
             {cards}
           </SimpleGrid>
     </Container>
@@ -208,16 +194,25 @@ function App() {
 
   return (
     <div className="App">
-      <Flex>
-        <Spacer />
-        {currentAccount !== "" ? renderAddressContainer() : null}
-      </Flex>
-      <Heading size="xl" m='30px' color='#0e126e' isTruncated >  Stakeborg Community Achievements </Heading>
-      <Heading size="lg" mb='30px' color='gray.700' isTruncated >   One for All and All for DAO </Heading>
-      <div >
-        {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
-      </div>
-     
+      <Container maxW='container.xl' pb='3'>
+        <Flex>
+          <Spacer />
+          {currentAccount !== "" ? renderAddressContainer() : null}
+        </Flex>
+        <Heading size="xl" m='30px' color='#0e126e' isTruncated >  Stakeborg Community Achievements </Heading>
+        <Heading size="lg" mb='30px' color='gray.700' fontStyle='italic' isTruncated >"One for All and All for DAO" </Heading>
+        <div >
+          {currentAccount === "" ? renderNotConnectedContainer() : renderBadgeContainer()}
+        </div>
+      </Container>
+
+      <Container as="footer" role="contentinfo" py={{ base: '12', md: '16' }}>
+        <Stack spacing={{ base: '4', md: '5' }}>
+          <Text fontSize="sm" color="subtle" isTruncated>
+            &copy; {new Date().getFullYear()} Stakeborg DAO - Bring Web3.
+          </Text>
+        </Stack>
+      </Container>
     </div>
   );
 }

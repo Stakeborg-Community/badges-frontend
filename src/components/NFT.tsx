@@ -16,6 +16,7 @@ import {
   useDisclosure 
 } from '@chakra-ui/react'
 
+const axios = require('axios');
 
 export interface NFTProps {
   /**
@@ -34,6 +35,10 @@ export interface NFTProps {
    * The function to call upon minting
    */
   mintingFn: Function;
+  /**
+   * The base uri to get token info
+   */
+  baseUri: string;
 }
 
 export interface NFTData {
@@ -55,14 +60,14 @@ export const NFT = (props: NFTProps) => {
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/QmUn1h9BxgA7vshmuC6VGdq9mjLAbvctJNVAcXUWsaxuww/" + props.tokenId + ".json");
-          
-      if (!res.ok) {
+      //const res = await fetch();
+      let res = await axios.get(props.baseUri + props.tokenId + ".json")
+      if (res.status !== 200) {
         throw Error(
           `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
         );
       }
-      const data = await res.json();
+      const data = await res.data;
       if (_isMounted.current) {
         setNftData({
           tokenId: props.tokenId,
@@ -135,7 +140,7 @@ export const NFTCard = ({
 
   let commonImageClasses = ownedStatus?.description;
   let button;
-  if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
+  if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '9999')
   {
     button = <Button color='white' my="3" className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
               Mint
