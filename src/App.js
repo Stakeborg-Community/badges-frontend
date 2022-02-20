@@ -146,7 +146,7 @@ function App() {
     console.groupCollapsed('Owned tokens');
 
 
-    // Pt. a nu apela blockchain-ul in for loop si a fi mai rapid si mai eficient
+    // Pentru a nu apela blockchain-ul in loops si a fi mai eficient, le extragen o singura data
     let copies = []
 
     try {
