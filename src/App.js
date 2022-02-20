@@ -1,4 +1,3 @@
-
 import './App.css';
 import { useState, useEffect } from "react";
 import {
@@ -8,8 +7,8 @@ import {
   ModalOverlay,
   useDisclosure 
 } from '@chakra-ui/react'
-import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
-import { AttachmentIcon, InfoIcon } from '@chakra-ui/icons'
+import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, Link, Text, Image, Center } from '@chakra-ui/react';
+import { AttachmentIcon, InfoIcon, ExternalLinkIcon, createIcon  } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
@@ -19,11 +18,14 @@ import brochure from "./resources/pdf/Brochure2.pdf"
 import mvpen from "./resources/pdf/MVP_EN.pdf"
 import mvpro from "./resources/pdf/MVP_RO.pdf"
 import ReactCountryFlag from "react-country-flag"
+import metamaskIcon from "./resources/img/metamask.svg"
+import polygonIcon from "./resources/img/polygon.svg"
+import githubIcon from "./resources/img/github.svg"
+
+
 
 const Logo = require('./resources/img/sbdao.png')
-const TOKEN_IDS = [0,1,2,3,4,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
-
-
+const TOKEN_IDS = [0,1,2,3,4,9999,9999,9999,9999,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
 
 
 function App() {
@@ -192,7 +194,8 @@ function App() {
         width='200px'
         border='2px'
       >
-      Connect to Wallet
+        <Image src={metamaskIcon} w='10' mr='2'></Image>
+      Connect Wallet
       </Button>
     </Container>
     
@@ -202,7 +205,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='190px' spacing='30px'>
+          <SimpleGrid minChildWidth='150px' spacing='30px'>
             {cards}
           </SimpleGrid>
     </Container>
@@ -222,10 +225,10 @@ function App() {
 
   return (
     <div className="App">
-      <Modal isOpen={isOpen} onClose={onClose} min-height='200px' min-width='300px' size='5xl' isCentered motionPreset="scale" scrollBehavior="outside" allowPinchZoom>
+      <Modal isOpen={isOpen} onClose={onClose} min-height='200px' min-width='300px' size='4xl' isCentered motionPreset="scale" scrollBehavior="outside" allowPinchZoom>
         <ModalOverlay bg='blackAlpha.600'
                         backdropFilter='auto'
-                        backdropBlur='10px'/>
+                        backdropBlur='20px'/>
         <ModalContent>
               <AspectRatio ratio={4/3}>
                 <iframe src={selectedPdf}/>
@@ -251,8 +254,23 @@ function App() {
         </div>
       </Container>
 
-      <Container as="footer" role="contentinfo" py={{ base: '12', md: '16' }}>
-        <Stack spacing={{ base: '4', md: '5' }}>
+      <Container as="footer" role="contentinfo" pt={{ base: '12', md: '15vh' }}>
+        <Stack spacing={{ base: '4', md: '2' }}>
+          <Center>
+              <Text fontSize="sm" color="purple.300" isTruncated >
+                <Image w='5' src={polygonIcon} float='left'/> &nbsp;
+                <Link href={'https://mumbai.polygonscan.com/address/'+wallet.CONTRACT_ADDRESS_V2} isExternal>
+                  {wallet.CONTRACT_ADDRESS_V2}
+                </Link>
+              </Text>
+          </Center>
+          <Center>
+              <Text fontSize="sm" isTruncated >
+                <Image w='5' src={githubIcon} float='left'/> &nbsp;
+                <Link href='https://github.com/Stakeborg-Community/badges-frontend' isExternal> Badges Frontend </Link>
+              </Text>
+          </Center>
+              
           <Text fontSize="sm" color="subtle" isTruncated>
             &copy; {new Date().getFullYear()} Stakeborg DAO - Bring Web3.
           </Text>

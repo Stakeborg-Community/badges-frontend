@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
 
 const axios = require('axios');
-const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
+export const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 
 export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
     const {ethereum} = window;  

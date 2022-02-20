@@ -85,16 +85,17 @@ export interface NFTData {
   
     let commonImageClasses = ownedStatus?.description;
     let button;
+
     if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '9999')
     {
       button = <Button color='white' my="3" className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
                 Mint
               </Button>;
     }
+
     const image = <Image className={commonImageClasses + ' hoverglow'}  src={data?.image} fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/>;
     //const imageReflected = <Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/>;
-  
-    const imageModal = <Image  src={data?.image} fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" />;
+    const imageModal = <Image  src={data?.image} px='30px' pb='5px' fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" />;
   
   
   
@@ -104,10 +105,10 @@ export interface NFTData {
                         backdropFilter='auto'
                         backdropBlur='10px'/>
           <ModalContent>
-            <ModalHeader textAlign={'center'} fontWeight='900' lineHeight='tight'> <Heading as='h1' size='xl' >{name} </Heading><Divider w='50%' mx='25%'/></ModalHeader>
+            <ModalHeader py='2' textAlign={'center'} fontWeight='900' lineHeight='tight'> <Heading as='h1' size='lg' >{name} </Heading><Divider w='50%' mx='25%' pt='2' /></ModalHeader>
               
             <ModalCloseButton />
-            <ModalBody mb='3'>
+            <ModalBody>
                 <Grid templateRows='repeat(1, 1fr)' templateColumns='repeat(2, 1fr)'gap={5}>
                   <GridItem rowSpan={1} colSpan={1}>
                     {imageModal}
