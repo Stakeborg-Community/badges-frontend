@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/badges-frontend/static/css/main.3717280b.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.cf74dc04.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.cf74dc04.chunk.js.map",
+    "main.js": "/badges-frontend/static/js/main.cbb709da.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.cbb709da.chunk.js.map",
     "runtime-main.js": "/badges-frontend/static/js/runtime-main.a098d3d0.js",
     "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.a098d3d0.js.map",
     "static/js/2.c87c4f2e.chunk.js": "/badges-frontend/static/js/2.c87c4f2e.chunk.js",
@@ -26,6 +26,6 @@
     "static/js/runtime-main.a098d3d0.js",
     "static/js/2.c87c4f2e.chunk.js",
     "static/css/main.3717280b.chunk.css",
-    "static/js/main.cf74dc04.chunk.js"
+    "static/js/main.cbb709da.chunk.js"
   ]
 }
