@@ -100,7 +100,7 @@ export interface NFTData {
 
     const image = <Skeleton isLoaded={imageLoaded}><Image className={commonImageClasses + ' hoverglow'}  src={data?.image} onLoad={()=>setImageLoaded(true)} borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/></Skeleton>;
     //const imageReflected = <Skeleton><Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/></Skeleton>;
-    const imageModal = <Skeleton><Image  src={data?.image} px='10px' pb='5px' borderRadius="xl" w={size} loading="lazy" /></Skeleton>;
+    const imageModal = <Skeleton isLoaded={imageLoaded}><Image  src={data?.image} px='10px' pb='5px' borderRadius="xl" w={size} loading="lazy" /></Skeleton>;
   
   
   
