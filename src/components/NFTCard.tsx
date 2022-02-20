@@ -20,7 +20,8 @@ import {
   AccordionItem,
   AccordionPanel,
   Center,
-  Divider
+  Divider,
+  Skeleton
 } from '@chakra-ui/react';
 import {
   Modal,  
@@ -31,6 +32,7 @@ import {
   ModalBody,
   useDisclosure 
 } from '@chakra-ui/react'
+import { useState } from "react";
 
 
 export interface NFTData {
@@ -67,6 +69,7 @@ export interface NFTData {
     const tokenId = data?.tokenId;
     const attributes = data?.attributes;
   
+    const [imageLoaded, setImageLoaded] = useState(false);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const mint = () =>
     {
@@ -93,9 +96,11 @@ export interface NFTData {
               </Button>;
     }
 
-    const image = <Image className={commonImageClasses + ' hoverglow'}  src={data?.image} fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/>;
-    //const imageReflected = <Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/>;
-    const imageModal = <Image  src={data?.image} px='10px' pb='5px' fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" />;
+
+
+    const image = <Skeleton isLoaded={imageLoaded}><Image className={commonImageClasses + ' hoverglow'}  src={data?.image} onLoad={()=>setImageLoaded(true)} borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/></Skeleton>;
+    //const imageReflected = <Skeleton><Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/></Skeleton>;
+    const imageModal = <Skeleton><Image  src={data?.image} px='10px' pb='5px' borderRadius="xl" w={size} loading="lazy" /></Skeleton>;
   
   
   
