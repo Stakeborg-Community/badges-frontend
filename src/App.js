@@ -7,7 +7,7 @@ import {
   ModalOverlay,
   useDisclosure 
 } from '@chakra-ui/react'
-import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, Link, Text, Image, Center } from '@chakra-ui/react';
+import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, Link, Text, Image, Center, IconButton } from '@chakra-ui/react';
 import { AttachmentIcon, InfoIcon, ExternalLinkIcon, createIcon  } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
 import { Address } from "@web3-ui/components";
@@ -129,11 +129,11 @@ function App() {
       let value = sortedCardsStatus[key]
       let cardsArray = []
       for (let i=0; i<value.length; i++) {
-        let nftComponent = <NFT key={"nft_"+value[i].id+"_"+i} tokenId={value[i].id} ownedStatus={value[i].status} mintingFn={mint} baseUri={baseUri}></NFT>;
+        let nftComponent = <NFT key={"nft_"+value[i].id+"_"+i} tokenId={value[i].id} ownedStatus={value[i].status} mintingFn={mint} baseUri={baseUri}></NFT>
         cardsArray.push(nftComponent);
       }
-      //collection.push(<Text key={"collection_"+key}>{key}</Text>)
-      collection.push(<SimpleGrid minChildWidth='120px' spacing='100px'>{cardsArray}</SimpleGrid>)
+      collection.push(<Heading as='h4' size="lg" mt='30px' mb='2' textAlign='left' color='blue.500' isTruncated key={"collection_name_"+key}>{key}</Heading>)      
+      collection.push(<SimpleGrid key={"collection_"+key} minChildWidth='120px' spacing='100px'>{cardsArray}</SimpleGrid>)
     }
     
     console.log("Create nft arrays");
@@ -231,7 +231,8 @@ function App() {
   );
 
   const renderAddressContainer = () => (
-    <Box alignItems='center' w='200px' p='10px' mr='30px' bg='tomato' color='white' borderRadius='lg' boxShadow='lg' bgGradient="linear(to-l, #3c4bbb, #00003b)" >
+    
+    <Box alignItems='center' w='200px' p='8px' bg='tomato' color='white' borderRadius='lg' boxShadow='lg' bgGradient="linear(to-l, #3c4bbb, #00003b)" >
         <Address value={currentAccount} shortened copiable></Address> 
     </Box>
   )
@@ -261,8 +262,9 @@ function App() {
 
           <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpen)} aria-label="EN Vission" fontSize={'lg'} ><ReactCountryFlag countryCode="GB" svg title='GB'/>&nbsp;Vission</Button>
           <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpro)} aria-label='RO Viziune' fontSize={'lg'} ><ReactCountryFlag countryCode="RO" title="RO" svg />&nbsp;Viziune</Button>
-          <Spacer />
+          <Spacer />          
           {currentAccount !== "" ? renderAddressContainer() : null}
+          {currentAccount !== "" ? <IconButton size='md' colorScheme='red' variant='ghost' icon={<ExternalLinkIcon/>} onClick={()=>setCurrentAccount("")}/> : null}
         </Flex>
         <Heading size="xl" m='30px' color='#0e126e' isTruncated >  Stakeborg Community Achievements </Heading>
         <Heading size="lg" mb='30px' color='gray.700' fontStyle='italic' isTruncated >"One for All and All for DAO" </Heading>
