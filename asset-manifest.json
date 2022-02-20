@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/badges-frontend/static/css/main.3717280b.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.cbb709da.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.cbb709da.chunk.js.map",
+    "main.js": "/badges-frontend/static/js/main.d20492e0.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.d20492e0.chunk.js.map",
     "runtime-main.js": "/badges-frontend/static/js/runtime-main.a098d3d0.js",
     "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.a098d3d0.js.map",
-    "static/js/2.c87c4f2e.chunk.js": "/badges-frontend/static/js/2.c87c4f2e.chunk.js",
-    "static/js/2.c87c4f2e.chunk.js.map": "/badges-frontend/static/js/2.c87c4f2e.chunk.js.map",
+    "static/js/2.e216a220.chunk.js": "/badges-frontend/static/js/2.e216a220.chunk.js",
+    "static/js/2.e216a220.chunk.js.map": "/badges-frontend/static/js/2.e216a220.chunk.js.map",
     "static/js/3.ad26bd45.chunk.js": "/badges-frontend/static/js/3.ad26bd45.chunk.js",
     "static/js/3.ad26bd45.chunk.js.map": "/badges-frontend/static/js/3.ad26bd45.chunk.js.map",
     "index.html": "/badges-frontend/index.html",
     "static/css/main.3717280b.chunk.css.map": "/badges-frontend/static/css/main.3717280b.chunk.css.map",
-    "static/js/2.c87c4f2e.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.c87c4f2e.chunk.js.LICENSE.txt",
+    "static/js/2.e216a220.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.e216a220.chunk.js.LICENSE.txt",
     "static/media/Brochure2.946fbb7d.pdf": "/badges-frontend/static/media/Brochure2.946fbb7d.pdf",
     "static/media/index.css": "/badges-frontend/static/media/FuturaLTProHeavy.8f9e6e63.ttf",
     "static/media/MVP_EN.c556cd65.pdf": "/badges-frontend/static/media/MVP_EN.c556cd65.pdf",
@@ -19,13 +19,12 @@
     "static/media/bg_blur.8f1f3050.png": "/badges-frontend/static/media/bg_blur.8f1f3050.png",
     "static/media/github.04be58c1.svg": "/badges-frontend/static/media/github.04be58c1.svg",
     "static/media/metamask.b6b09bd4.svg": "/badges-frontend/static/media/metamask.b6b09bd4.svg",
-    "static/media/polygon.fb5b773c.svg": "/badges-frontend/static/media/polygon.fb5b773c.svg",
-    "static/media/sbdao.png": "/badges-frontend/static/media/sbdao.cdf577d9.png"
+    "static/media/polygon.fb5b773c.svg": "/badges-frontend/static/media/polygon.fb5b773c.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.a098d3d0.js",
-    "static/js/2.c87c4f2e.chunk.js",
+    "static/js/2.e216a220.chunk.js",
     "static/css/main.3717280b.chunk.css",
-    "static/js/main.cbb709da.chunk.js"
+    "static/js/main.d20492e0.chunk.js"
   ]
 }
