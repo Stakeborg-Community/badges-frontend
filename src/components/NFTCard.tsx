@@ -62,7 +62,7 @@ export interface NFTData {
     setLoading: Function;
   }) => {
     const name = data?.name;
-    const description = data?.description;
+    const descriptionLines = data?.description?.split("\n");
     const ownedStatus = data?.ownedStatus;
     const tokenId = data?.tokenId;
     const attributes = data?.attributes;
@@ -95,7 +95,7 @@ export interface NFTData {
 
     const image = <Image className={commonImageClasses + ' hoverglow'}  src={data?.image} fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/>;
     //const imageReflected = <Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/>;
-    const imageModal = <Image  src={data?.image} px='30px' pb='5px' fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" />;
+    const imageModal = <Image  src={data?.image} px='10px' pb='5px' fallbackSrc='https://via.placeholder.com/150' borderRadius="xl" w={size} loading="lazy" />;
   
   
   
@@ -109,12 +109,12 @@ export interface NFTData {
               
             <ModalCloseButton />
             <ModalBody>
-                <Grid templateRows='repeat(1, 1fr)' templateColumns='repeat(2, 1fr)'gap={5}>
-                  <GridItem rowSpan={1} colSpan={1}>
+                <Grid templateRows='repeat(1, 1fr)' templateColumns='repeat(5, 1fr)'gap={5}>
+                  <GridItem rowSpan={1} colSpan={2}>
                     {imageModal}
                   </GridItem>
 
-                  <GridItem rowSpan={1} colSpan={1}>
+                  <GridItem rowSpan={1} colSpan={3}>
                       <Accordion allowToggle allowMultiple defaultIndex={[0]}>
                         <AccordionItem borderStyle='none'>
                             <AccordionButton>
@@ -122,7 +122,9 @@ export interface NFTData {
                               <AccordionIcon />
                             </AccordionButton>
                           <AccordionPanel pb={4} textAlign={'center'}>
-                          {description}
+                          {descriptionLines && descriptionLines.map((line, i) =>
+                            {return <Text key={line+'_'+ tokenId + '_' + i}>{line} <br/></Text>}
+                          )}
                           </AccordionPanel>
                         </AccordionItem>
 

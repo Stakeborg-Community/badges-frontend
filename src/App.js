@@ -205,7 +205,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='150px' spacing='30px'>
+          <SimpleGrid minChildWidth='120px' spacing='100px'>
             {cards}
           </SimpleGrid>
     </Container>
