@@ -21,12 +21,7 @@ import ReactCountryFlag from "react-country-flag"
 import metamaskIcon from "./resources/img/metamask.svg"
 import polygonIcon from "./resources/img/polygon.svg"
 import githubIcon from "./resources/img/github.svg"
-
-
-
-const Logo = require('./resources/img/sbdao.png')
-const TOKEN_IDS = [0,1,2,3,4,9999,9999,9999,9999,9999]; // This spits out warnings in log but it's fine, we do not care about the unknwon badges
-
+import tokens from "./json/tokens.json";
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -127,15 +122,23 @@ function App() {
  
 
   const updateNFTArray = () => {
-    let cardsArray = [];
+    let collection = [];
+
     let sortedCardsStatus = NFTOwnershipStatus.sortCards(cardsOwnedStatus);
-    for (let i=0; i<sortedCardsStatus.length; i++) {
-      let nftComponent = <NFT key={sortedCardsStatus[i].id} tokenId={sortedCardsStatus[i].id} ownedStatus={sortedCardsStatus[i].status} mintingFn={mint} baseUri={baseUri}></NFT>;
-      cardsArray.push(nftComponent);
+    for (let key in sortedCardsStatus) {
+      let value = sortedCardsStatus[key]
+      let cardsArray = []
+      for (let i=0; i<value.length; i++) {
+        let nftComponent = <NFT key={"nft_"+value[i].id+"_"+i} tokenId={value[i].id} ownedStatus={value[i].status} mintingFn={mint} baseUri={baseUri}></NFT>;
+        cardsArray.push(nftComponent);
+      }
+      //collection.push(<Text key={"collection_"+key}>{key}</Text>)
+      collection.push(<SimpleGrid minChildWidth='120px' spacing='100px'>{cardsArray}</SimpleGrid>)
     }
+    
     console.log("Create nft arrays");
-    console.log(cardsArray);
-    setCards(cardsArray);
+    console.log(collection);
+    setCards(collection);
   }
 
 
@@ -148,36 +151,54 @@ function App() {
     console.groupCollapsed('Owned tokens');
 
 
-    // Pentru a nu apela blockchain-ul in loops si a fi mai eficient, le extragen o singura data
-    let copies = []
+    // Do batch balance checking for each collection to be displayed
+    let copies = {}
 
-    try {
-      let reqAccounts = Array(TOKEN_IDS.length).fill(currentAccount)
-      copies = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
-      console.log(copies)
-      let tokenURI = await connectedContract.uri(0)
-      setBaseUri(tokenURI.replace(/{id}.json/, ""))  // reg. expr. pt a extrege baseUrl: de ex. din "ipfs.com/CID/1.json" devine "ipfs.com/CID/"
-    } catch (error) {
-      console.error(`Failed to get balance of tokens for address ${currentAccount}.`);
-      console.error(error);
-      console.groupEnd();
-      return;
+    for (let name in tokens.collectionName) {
+      let TOKEN_IDS = tokens.collectionName[name];
+      try {
+        let reqAccounts = Array(TOKEN_IDS.length).fill(currentAccount)
+        copies[name] = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
+        console.log(copies)
+        if (baseUri === null) {
+          let tokenURI = await connectedContract.uri(0)
+          setBaseUri(tokenURI.replace(/{id}.json/, ""))  // extract baseUrl: from "ipfs.com/CID/1.json"  to  "ipfs.com/CID/"
+        }
+      } catch (error) {
+        console.error(`Failed to get balance of tokens for address ${currentAccount}.`);
+        console.error(error);
+        console.groupEnd();
+        return;
+      }
     }
+    
 
 
     let ownedstatus = {};
-    for (let i=0; i<TOKEN_IDS.length; i++) {
-      const id = TOKEN_IDS[i];
-      const whitelisted = merkle.isWhitelisted(currentAccount, id);
+    for (let name in tokens.collectionName) {
+      let TOKEN_IDS = tokens.collectionName[name];
+      ownedstatus[name] = ownedstatus[name] ?? [];
       
-      if (parseInt(copies[i]) !== 0) {
-        ownedstatus[id] = NFTOwnershipStatus.Owned;
-      } 
-      else if (whitelisted) {
-        ownedstatus[id] = NFTOwnershipStatus.Mintable;
-      } else {
-        ownedstatus[id] = NFTOwnershipStatus.NonMintable;
-      }       
+        
+      
+      for (let i=0; i<TOKEN_IDS.length; i++) {
+        const id = TOKEN_IDS[i];
+        const whitelisted = merkle.isWhitelisted(currentAccount, id);
+        
+        let status = {};
+        status['id'] = id;
+        if (parseInt(copies[name][i]) !== 0) {
+          
+          status['status'] = NFTOwnershipStatus.Owned
+        } 
+        else if (whitelisted) {
+          status['status'] = NFTOwnershipStatus.Mintable;
+        } else {
+          status['status'] = NFTOwnershipStatus.NonMintable;
+        }   
+        
+        ownedstatus[name].push(status)
+      }
     }
     console.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
@@ -205,9 +226,7 @@ function App() {
   const renderBadgeContainer = () => (
 
     <Container maxW='container.xl' className="badge-container">
-          <SimpleGrid minChildWidth='120px' spacing='100px'>
-            {cards}
-          </SimpleGrid>
+          {cards}
     </Container>
   );
 
@@ -238,12 +257,10 @@ function App() {
 
       <Container maxW='container.xl' pb='3'>
         <Flex flexWrap={'wrap'}>
-        <Button mx='2' onClick={() => showPdf(brochure)} colorScheme='blue' leftIcon={<InfoIcon/>} variant={'ghost'}>Brochure</Button>
+          <Button mx='2' onClick={() => showPdf(brochure)} colorScheme='blue' leftIcon={<InfoIcon/>} variant={'ghost'}>Brochure</Button>
 
-          <ButtonGroup isAttached variant={'ghost'} colorScheme='blue'>
-            <Button onClick={() => showPdf(mvpen)} aria-label="EN Version" fontSize={'lg'} >Mission, Vission and Pillars |&nbsp; <ReactCountryFlag countryCode="GB" svg title='GB'/></Button>
-            <Button onClick={() => showPdf(mvpro)} aria-label='RO Version' fontSize={'lg'} ><ReactCountryFlag countryCode="RO" title="RO" svg /></Button>
-          </ButtonGroup>
+          <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpen)} aria-label="EN Vission" fontSize={'lg'} ><ReactCountryFlag countryCode="GB" svg title='GB'/>&nbsp;Vission</Button>
+          <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpro)} aria-label='RO Viziune' fontSize={'lg'} ><ReactCountryFlag countryCode="RO" title="RO" svg />&nbsp;Viziune</Button>
           <Spacer />
           {currentAccount !== "" ? renderAddressContainer() : null}
         </Flex>

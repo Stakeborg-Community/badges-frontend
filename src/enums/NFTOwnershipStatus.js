@@ -20,11 +20,17 @@ const cardsStatusComparator = (a,b) => {
   }
 
 export  const sortCards = (ownedStatus) => {
-    let status = []
-    for (let k in ownedStatus)
-    {
-      status.push({ 'id': k, 'status':ownedStatus[k]});
+    let collections = {}
+    for (let name in ownedStatus) {
+      let values = ownedStatus[name]
+      let status = []
+      for (let i=0; i<values.length; i++)
+      {
+        status.push({ 'id': values[i].id, 'status':values[i].status});
+      }
+      status.sort(cardsStatusComparator);
+      collections[name] = status;
     }
-    status.sort(cardsStatusComparator);
-    return status;
+    
+    return collections;
   }

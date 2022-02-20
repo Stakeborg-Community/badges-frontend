@@ -25,7 +25,9 @@ export const checkIfWalletIsConnected = async (currentAccountSetter, connectedCo
 
     if (accounts.length !== 0) {
         const account = accounts[0];
-        window.ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
+        ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
+        ethereum.on('chainChanged', (_chainId) => window.location.reload()); // reload page if chain changed
+
         console.log("Found authorized account:", account);
         await currentAccountSetter(account);
     }    
