@@ -120,7 +120,7 @@ export interface NFTData {
                   </GridItem>
 
                   <GridItem rowSpan={1} colSpan={3}>
-                      <Accordion allowToggle allowMultiple defaultIndex={[0]}>
+                      <Accordion allowToggle allowMultiple defaultIndex={[0,1]}>
                         <AccordionItem borderStyle='none'>
                             <AccordionButton>
                               <Heading flex='1' size='md'>Description</Heading>

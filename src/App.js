@@ -10,6 +10,7 @@ import {
 import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, Link, Text, Image, Center, IconButton } from '@chakra-ui/react';
 import { AttachmentIcon, InfoIcon, ExternalLinkIcon, createIcon  } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
+import { HelpPopover } from './components/HelpPopover';
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
 import * as wallet from "./components/wallet.js";
@@ -132,7 +133,7 @@ function App() {
         let nftComponent = <NFT key={"nft_"+value[i].id+"_"+i} tokenId={value[i].id} ownedStatus={value[i].status} mintingFn={mint} baseUri={baseUri}></NFT>
         cardsArray.push(nftComponent);
       }
-      collection.push(<Heading as='h4' size="lg" mt='30px' mb='2' textAlign='left' color='blue.500' isTruncated key={"collection_name_"+key}>{key}</Heading>)      
+      collection.push(<Heading as='h4' size="lg" mt='30px' mb='2' textAlign='left' color='white' isTruncated key={"collection_name_"+key}>{key}</Heading>)      
       collection.push(<SimpleGrid key={"collection_"+key} minChildWidth='120px' spacing='100px'>{cardsArray}</SimpleGrid>)
     }
     
@@ -237,6 +238,8 @@ function App() {
     </Box>
   )
 
+ 
+
   const showPdf = (pdf) =>
   {
     setSelectedPdf(pdf);
@@ -258,13 +261,15 @@ function App() {
 
       <Container maxW='container.xl' pb='3'>
         <Flex flexWrap={'wrap'}>
+          <HelpPopover/> 
           <Button mx='2' onClick={() => showPdf(brochure)} colorScheme='blue' leftIcon={<InfoIcon/>} variant={'ghost'}>Brochure</Button>
 
-          <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpen)} aria-label="EN Vission" fontSize={'lg'} ><ReactCountryFlag countryCode="GB" svg title='GB'/>&nbsp;Vission</Button>
+          <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpen)} aria-label="EN Vision" fontSize={'lg'} ><ReactCountryFlag countryCode="GB" svg title='GB'/>&nbsp;Vision</Button>
           <Button variant={'ghost'} colorScheme='blue' onClick={() => showPdf(mvpro)} aria-label='RO Viziune' fontSize={'lg'} ><ReactCountryFlag countryCode="RO" title="RO" svg />&nbsp;Viziune</Button>
-          <Spacer />          
+          <Spacer />         
           {currentAccount !== "" ? renderAddressContainer() : null}
           {currentAccount !== "" ? <IconButton size='md' colorScheme='red' variant='ghost' icon={<ExternalLinkIcon/>} onClick={()=>setCurrentAccount("")}/> : null}
+
         </Flex>
         <Heading size="xl" m='30px' color='#0e126e' isTruncated >  Stakeborg Community Achievements </Heading>
         <Heading size="lg" mb='30px' color='gray.700' fontStyle='italic' isTruncated >"One for All and All for DAO" </Heading>
