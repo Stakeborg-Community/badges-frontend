@@ -1,7 +1,8 @@
 import { ethers } from "ethers";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
 
-const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
+const axios = require('axios');
+export const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 
 export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
     const {ethereum} = window;  
@@ -24,11 +25,12 @@ export const checkIfWalletIsConnected = async (currentAccountSetter, connectedCo
 
     if (accounts.length !== 0) {
         const account = accounts[0];
+        ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
+        ethereum.on('chainChanged', (_chainId) => window.location.reload()); // reload page if chain changed
+
         console.log("Found authorized account:", account);
         await currentAccountSetter(account);
-    }
-
-    
+    }    
 }
 
 const switchNetworkMumbai = async () => {

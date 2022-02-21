@@ -27,7 +27,7 @@ class Plugin extends Singleton {
 		add_action( 'rest_api_init', array( $this, 'add_users_api_route' ) );
 
 		// Enable application passwords for api.
-		add_filter( 'wp_is_application_passwords_available', '__return_true' );
+		add_filter( 'wp_is_application_passwords_available', '__return_true', 9999 );
 
 	}
 
@@ -57,30 +57,62 @@ class Plugin extends Singleton {
 	public function get_users_data() {
 
 		if ( ! function_exists( 'xprofile_get_field_data' ) ) {
-			return array();
+			return array( array( 'error' => 'Something went terribly wrong.' ) );
 		}
 
-		$data  = array();
-		$users = get_users();
-		if ( ! empty( $users ) ) {
-			foreach ( $users as $user ) {
+		 $type_options = array(
+			 '0',
+			 '100',
+			 '250',
+			 '500',
+			 '1000',
+			 'with-erc20',
+		 );
 
-				$erc20 = xprofile_get_field_data( 'ERC20 Address', $user->ID );
+		 if ( isset( $_GET['type'] ) && in_array( $_GET['type'], $type_options ) ) {
+			 $type = sanitize_text_field( $_GET['type'] );
+		 }
 
-				if ( ! $erc20 ) {
-					continue;
-				}
+		 if ( ! isset( $type ) ) {
+			 return array( array( 'error' => 'Missing type param. C\'mon man!' ) );
+		 }
 
-				$data[ $user->ID ] = array(
-					'username' => $user->user_login,
-					'name'     => $user->display_name,
-					'email'    => $user->user_email,
-					'erc20'    => $erc20,
-				);
-			}
-		}
+		 $data       = array();
+		 $query_args = array(
+			 'orderby' => 'user_registered',
+			 'order'   => 'ASC',
+		 );
 
-		return $data;
+		 if ( $type === 'with-erc20' ) {
+			 $query_args['number'] = -1;
+		 } else {
+			 $prev                 = $type_options[ array_search( $type, $type_options ) - 1 ];
+			 $query_args['number'] = $type - $prev;
+			 $query_args['offset'] = $prev;
+		 }
+
+		 $users = get_users( $query_args );
+
+		 if ( ! empty( $users ) ) {
+			 foreach ( $users as $user ) {
+
+				 $erc20 = xprofile_get_field_data( 'ERC20 Address', $user->ID );
+
+				 // Just with registered ERC20 addresses.
+				 if ( ! $erc20 && $type === 'with-erc20' ) {
+					 continue;
+				 }
+
+				 $data[ $user->ID ] = array(
+					 'username' => $user->user_login,
+					 'name'     => $user->display_name,
+					 'email'    => $user->user_email,
+					 'erc20'    => $erc20,
+				 );
+			 }
+		 }
+
+		 return $data;
 	}
 
 	/**
