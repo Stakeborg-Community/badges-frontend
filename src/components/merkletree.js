@@ -7,33 +7,15 @@ export default class Merkle {
     constructor() {
         this.whitelist = whitelist;
         this.trees = [];
-        return (async () => {
-            // try {      
-            //     const res = await fetch("https://ipfs.io/ipfs/QmaLwggVBJhqSmQhdDPa4zipug8BHME3PV4JPVbsXxRBvN/whitelist.json");
-                    
-            //     if (!res.ok) {
-            //       throw Error(
-            //         `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
-            //       );
-            //     }
-            //     const data = await res.json();
-                
-            //     console.log("Whitelist received", data);
-            //     this.whitelist = data;
-            // } catch (error) {
-            //     console.error(error);
-            // }
-            console.groupCollapsed("Merkle root for all tokens:");
+
+        console.groupCollapsed("Merkle root for all tokens:");
             for (let id in this.whitelist.tokenId)
             {
                 const leaves = this.getLeaves(id);
                 this.trees[id] = new MerkleTree(leaves, keccak256, {sort: true});
                 console.log(id, this.getRoot(id));
             }
-            console.groupEnd();
-
-            return this;
-        })();       
+        console.groupEnd();      
     }
 
     tokenWhitelist(tokenId) {

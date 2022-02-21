@@ -47,7 +47,7 @@ function App() {
 
   // Initialise merkle trees and do wallet connection
   useEffect( () => {
-    new Merkle().then((result) => setMerkle(result));
+    setMerkle(new Merkle());
     checkWalletConnection();
   }, []);
 
