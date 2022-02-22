@@ -1,17 +1,7 @@
-import "./NFT.css";
+
 import React, { useCallback, useEffect, useRef } from 'react';
-import {
-  Box,
-  Heading,
-  Image,
-  Flex,
-  Tag,
-  Text,
-  VStack,
-  Skeleton,
-  Alert,
-  AlertIcon,
-} from '@chakra-ui/react';
+import { NFTCard, NFTData } from './NFTCard';
+const axios = require('axios');
 
 export interface NFTProps {
   /**
@@ -26,42 +16,43 @@ export interface NFTProps {
    * The status of the NFT ownership
    */
   ownedStatus: Symbol;
-}
-
-export interface NFTData {
-  tokenId: string;
-  imageUrl?: string;
-  name: string | null;
-  description: string;
-  ownedStatus: Symbol;
+  /**
+   * The function to call upon minting
+   */
+  mintingFn: Function;
+  /**
+   * The base uri to get token info
+   */
+  baseUri: string;
 }
 
 /**
  * Component to fetch and display NFT data
  */
-export const NFT = ({ tokenId, ownedStatus, size = 'xs'}: NFTProps) => {
+export const NFT = (props: NFTProps) => {
   const _isMounted = useRef(true);
   const [nftData, setNftData] = React.useState<NFTData>();
+  const [loading, setLoading] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string>();
-
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/QmbjoafeN3Xr1bjeyP4xEKtr2CAWWXxekq1PCY3rKv3esA/" + tokenId + ".json");
-          
-      if (!res.ok) {
+      //const res = await fetch();
+      let res = await axios.get(props.baseUri + props.tokenId + ".json")
+      if (res.status !== 200) {
         throw Error(
           `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
         );
       }
-      const data = await res.json();
+      const data = await res.data;
       if (_isMounted.current) {
         setNftData({
-          tokenId: tokenId,
-          imageUrl: data.image,
+          tokenId: props.tokenId,
+          image: data.image,
           name: data.name,
+          attributes: data.attributes,
           description: data.description,
-          ownedStatus: ownedStatus
+          ownedStatus: props.ownedStatus
         });
       }
     } catch (error) {
@@ -74,51 +65,13 @@ export const NFT = ({ tokenId, ownedStatus, size = 'xs'}: NFTProps) => {
   }, []);
 
   useEffect(() => {
-    console.log(`Update on NFT ${tokenId} triggered. Owned status changed to ${ownedStatus.description}`);
+    console.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
       _isMounted.current = false;
     };
-  }, [ownedStatus]);
+  }, [props.ownedStatus, loading]);
 
-  return <NFTCard data={nftData} errorMessage={errorMessage} size={size} />;
-};
-
-/**
- * Private component to display an NFT given the data
- */
-export const NFTCard = ({
-  data,
-  errorMessage = '',
-  size,
-}: {
-  data: NFTData | undefined | null;
-  errorMessage?: string | undefined;
-  size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-}) => {
-  const name = data?.name;
-  const imageUrl = data?.imageUrl;
-  const description = data?.description;
-  const ownedStatus = data?.ownedStatus;
-  const tokenId = data?.tokenId;
-  const displayName = name;
-
-  if (errorMessage) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        {errorMessage}
-      </Alert>
-    );
-  }
-
-  let imageClasses = ownedStatus?.description;
-
-  return (
-      <Box maxW={size} borderRadius='lg' overflow="hidden" boxShadow='0px 0px 0px yellow' >
-        <a href="#"><Image className={imageClasses}  src={imageUrl} alt={displayName} borderRadius="lg" w={size} /></a>
-      </Box>
-
-  );
+  return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} loading={loading} setLoading={setLoading}/>;
 };
