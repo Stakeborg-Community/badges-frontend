@@ -38,6 +38,14 @@ class Plugin extends Singleton {
 	public function enqueue_assets() {
 		wp_register_style( 'stakeborg-badges', SBORG_BADGES_ASSETS_URL . 'build/main.css', array(), SBORG_BADGES_VERSION, 'all' );
 		wp_register_script( 'stakeborg-badges', SBORG_BADGES_ASSETS_URL . 'build/main.js', array(), SBORG_BADGES_VERSION, true );
+		wp_localize_script(
+			'stakeborg-badges',
+			'wpApiSettings',
+			array(
+				'apiRoot' => esc_url_raw( rest_url() ),
+				'nonce'   => wp_create_nonce( 'wp_rest' ),
+			)
+		);
 	}
 
 	public function add_users_api_route() {
@@ -58,6 +66,11 @@ class Plugin extends Singleton {
 
 		if ( ! function_exists( 'xprofile_get_field_data' ) ) {
 			return array( array( 'error' => 'Something went terribly wrong.' ) );
+		}
+
+		$format = 'array';
+		if ( isset( $_GET['format'] ) && $_GET['format'] === 'csv' ) {
+			$format = 'csv';
 		}
 
 		 $type_options = array(
@@ -110,6 +123,17 @@ class Plugin extends Singleton {
 					 'erc20'    => $erc20,
 				 );
 			 }
+		 }
+
+		 if ( $format === 'csv' ) {
+
+			 $csv_data = "ID,username,name,email,erc20\n";
+			 foreach ( $data as $id => $datum ) {
+				 $csv_data .= $id . ',' . implode( ',', array_values( $datum ) ) . "\n";
+			 }
+			 header( 'Content-Type: text/plain' );
+			 echo $csv_data;
+			 exit;
 		 }
 
 		 return $data;
