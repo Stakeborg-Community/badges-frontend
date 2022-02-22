@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/badges-frontend/static/css/main.3717280b.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.47887c1e.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.47887c1e.chunk.js.map",
+    "main.js": "/badges-frontend/static/js/main.d7b58ef2.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.d7b58ef2.chunk.js.map",
     "runtime-main.js": "/badges-frontend/static/js/runtime-main.f1a5e854.js",
     "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.f1a5e854.js.map",
     "static/js/2.233ace95.chunk.js": "/badges-frontend/static/js/2.233ace95.chunk.js",
@@ -14,8 +14,8 @@
     "static/js/2.233ace95.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.233ace95.chunk.js.LICENSE.txt",
     "static/media/Brochure2.946fbb7d.pdf": "/badges-frontend/static/media/Brochure2.946fbb7d.pdf",
     "static/media/index.css": "/badges-frontend/static/media/FuturaLTProHeavy.8f9e6e63.ttf",
-    "static/media/MVP_EN.c556cd65.pdf": "/badges-frontend/static/media/MVP_EN.c556cd65.pdf",
-    "static/media/MVP_RO.7842bab5.pdf": "/badges-frontend/static/media/MVP_RO.7842bab5.pdf",
+    "static/media/MVP_EN.c3d84cc9.pdf": "/badges-frontend/static/media/MVP_EN.c3d84cc9.pdf",
+    "static/media/MVP_RO.ef0d7658.pdf": "/badges-frontend/static/media/MVP_RO.ef0d7658.pdf",
     "static/media/bg_blur.8f1f3050.png": "/badges-frontend/static/media/bg_blur.8f1f3050.png",
     "static/media/github.04be58c1.svg": "/badges-frontend/static/media/github.04be58c1.svg",
     "static/media/metamask.b6b09bd4.svg": "/badges-frontend/static/media/metamask.b6b09bd4.svg",
@@ -25,6 +25,6 @@
     "static/js/runtime-main.f1a5e854.js",
     "static/js/2.233ace95.chunk.js",
     "static/css/main.3717280b.chunk.css",
-    "static/js/main.47887c1e.chunk.js"
+    "static/js/main.d7b58ef2.chunk.js"
   ]
 }
