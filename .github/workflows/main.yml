@@ -41,4 +41,3 @@ jobs:
             ftp-username: ${{secrets.DEPLOY_USER}}
             ftp-password: ${{ secrets.DEPLOY_PASSWORD }}
             local-dir: ./
-            server-dir: ${{ secrets.DEPLOY_PATH }}
