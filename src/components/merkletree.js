@@ -12,7 +12,7 @@ export default class Merkle {
         for (let id in this.whitelist.tokenId)
         {
             const leaves = this.getLeaves(id);
-            this.trees[id] = new MerkleTree(leaves, keccak256, {sort: true});
+            this.trees[id] = new MerkleTree(leaves, keccak256, {sortPairs: true});
             console.log(id, this.getRoot(id));
         }
         console.groupEnd();      
