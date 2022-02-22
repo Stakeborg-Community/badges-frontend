@@ -253,7 +253,7 @@ function App() {
                         backdropFilter='auto'
                         backdropBlur='20px'/>
         <ModalContent>
-              <AspectRatio ratio={4/3}>
+              <AspectRatio ratio={1}>
                 <iframe src={selectedPdf}/>
               </AspectRatio> 
         </ModalContent>
