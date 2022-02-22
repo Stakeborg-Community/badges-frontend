@@ -15,7 +15,7 @@ The route is protected so you need to provide authentication headers. The user y
 ```
 var config = {
   method: 'get',
-  url: 'https://stakeborgdao.xyz/wp-json/badges/v1/users?type=100|250|500|1000|with-erc20',
+  url: 'https://stakeborgdao.xyz/wp-json/badges/v1/users?type=100|250|500|1000|with-erc20&format=array|csv',
   headers: { 
     'Authorization': 'Basic Z2FicmllbDpZV1pZIFd4R1UgZVN4biBpN0taIDk4ZjYgWWRtSg=='
   }
