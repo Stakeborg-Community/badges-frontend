@@ -50,7 +50,8 @@ jobs:
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_old"
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "mkdir -p ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp"
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf $${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp/*"
-          scp -p22 -r ./build/* ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }}:${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp
+          scp -p22 -r ./* ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }}:${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "mv ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}stakeborg-badges-frontend ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_old/ && mv ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp/ ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}stakeborg-badges-frontend"
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp"
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "ls -lah"
 
