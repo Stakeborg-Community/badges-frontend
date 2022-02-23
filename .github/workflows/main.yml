@@ -42,6 +42,9 @@ jobs:
       - name: Build
         run: npm run build
         
+      - name: Remove node_modules
+        run: rm -R node_modules/
+        
       - name: Deploy files
         run: |
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_old"
