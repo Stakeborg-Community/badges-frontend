@@ -89,7 +89,7 @@ export interface NFTData {
     let commonImageClasses = ownedStatus?.description;
     let button;
 
-    if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '9999')
+    if (ownedStatus === NFTOwnershipStatus.Mintable && tokenId != '9999')
     {
       button = <Button color='white' my="3" className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
                 Mint
