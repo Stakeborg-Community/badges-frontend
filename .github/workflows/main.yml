@@ -53,5 +53,5 @@ jobs:
           scp -p22 -r ./* ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }}:${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "mv ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}stakeborg-badges-frontend ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_old/ && mv ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp/ ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}stakeborg-badges-frontend"
           ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_PATH }}_tmp"
-          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "ls -lah && cd webapps && ls -lah && cd stakeborgdao-xyz && ls -lah cd wp-content/plugins/stakeborg-badges-frontend && ls -lah && cd build && ls -lah"
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "cd webapps/stakeborgdao-xyz/wp-content/plugins/stakeborg-badges-frontend && ls -lah && cd build && ls -lah"
 
