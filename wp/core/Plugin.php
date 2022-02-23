@@ -36,8 +36,8 @@ class Plugin extends Singleton {
 	}
 
 	public function enqueue_assets() {
-		wp_register_style( 'stakeborg-badges', SBORG_BADGES_ASSETS_URL . 'build/main.css', array(), SBORG_BADGES_VERSION, 'all' );
-		wp_register_script( 'stakeborg-badges', SBORG_BADGES_ASSETS_URL . 'build/main.js', array(), SBORG_BADGES_VERSION, true );
+		wp_register_style( 'stakeborg-badges', SBORG_BADGES_ASSETS_URL . 'build/static/css/main.css', array(), SBORG_BADGES_VERSION, 'all' );
+		wp_register_script( 'stakeborg-badges', SBORG_BADGES_ASSETS_URL . 'build/static/js/main.js', array(), SBORG_BADGES_VERSION, true );
 		wp_localize_script(
 			'stakeborg-badges',
 			'wpApiSettings',

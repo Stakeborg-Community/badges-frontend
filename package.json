@@ -31,7 +31,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build && npm run build:clean",
-    "build:clean": "cd build && cp static/js/main*.js main.js && cp static/css/main*.css main.css",
+    "build:clean": "cd build && cp static/js/main*.js static/js/main.js && cp static/css/main*.css static/css/main.css",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
