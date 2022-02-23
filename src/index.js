@@ -36,11 +36,35 @@ const customTheme = extendTheme({
   },
 })
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.log(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children; 
+  }
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider theme={customTheme}>
-      <App />
+      <ErrorBoundary><App /></ErrorBoundary>      
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('stakeborg-badges')
@@ -50,3 +74,4 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
