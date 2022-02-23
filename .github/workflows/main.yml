@@ -43,7 +43,7 @@ jobs:
         run: npm run build
         
       - name: Remove node_modules
-        run: rm -R node_modules/
+        run: rm -R node_modules/ && rm -R src/ && rm -R public
         
       - name: Deploy files
         run: |
