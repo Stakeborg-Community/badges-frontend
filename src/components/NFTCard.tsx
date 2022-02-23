@@ -19,7 +19,6 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Center,
   Divider,
   Skeleton
 } from '@chakra-ui/react';
@@ -89,7 +88,7 @@ export interface NFTData {
     let commonImageClasses = ownedStatus?.description;
     let button;
 
-    if (ownedStatus === NFTOwnershipStatus.Mintable && tokenId != '9999')
+    if (ownedStatus === NFTOwnershipStatus.Mintable)
     {
       button = <Button color='white' my="3" className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
                 Mint
@@ -162,11 +161,11 @@ export interface NFTData {
            
           </ModalContent>
         </Modal>
-  
+  // eslint-disable-next-line
     return (
         <Box maxW={size} borderRadius='lg' >
           
-          <a href="#" onClick={onOpen}>
+          <a href="#p" onClick={onOpen}>
             {image}
             {modal}
           </a>

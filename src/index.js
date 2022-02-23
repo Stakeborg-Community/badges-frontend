@@ -4,7 +4,6 @@ import './index.css';
 import bg_blur from './resources/img/bg_blur.png'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from '@web3-ui/components';
 import { extendTheme } from "@chakra-ui/react"
 

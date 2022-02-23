@@ -3,12 +3,11 @@ import { useState, useEffect } from "react";
 import {
   Modal,
   ModalContent,
-  ModalBody,
   ModalOverlay,
   useDisclosure 
 } from '@chakra-ui/react'
-import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, ButtonGroup, Link, Text, Image, Center, IconButton } from '@chakra-ui/react';
-import { AttachmentIcon, InfoIcon, ExternalLinkIcon, createIcon  } from '@chakra-ui/icons'
+import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, Link, Text, Image, Center, IconButton } from '@chakra-ui/react';
+import { InfoIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
 import { HelpPopover } from './components/HelpPopover';
 import { Address } from "@web3-ui/components";
@@ -54,9 +53,10 @@ function App() {
 
   // Trigget getting of badges owned only when both the contract and merkel instance has been initialised
   useEffect(() => {
-    if (connectedContract !== null && merkle !== null && currentAccount != "") {
+    if (connectedContract !== null && merkle !== null && !currentAccount.equals("")) {
       getCardsOwned();
     }
+    // eslint-disable-next-line
   }, [connectedContract, currentAccount, merkle])
 
 
@@ -65,6 +65,7 @@ function App() {
     if (cardsOwnedStatus !== null) {
       updateNFTArray();
     }
+    // eslint-disable-next-line
   }, [cardsOwnedStatus]);   
   
 
@@ -254,7 +255,7 @@ function App() {
                         backdropBlur='20px'/>
         <ModalContent>
               <AspectRatio ratio={1}>
-                <iframe src={selectedPdf}/>
+                <iframe title="Pdf" src={selectedPdf}/>
               </AspectRatio> 
         </ModalContent>
       </Modal>
