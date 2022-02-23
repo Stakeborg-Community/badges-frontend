@@ -53,7 +53,7 @@ function App() {
 
   // Trigget getting of badges owned only when both the contract and merkel instance has been initialised
   useEffect(() => {
-    if (connectedContract !== null && merkle !== null && !currentAccount.equals("")) {
+    if (connectedContract !== null && merkle !== null && currentAccount !== "") {
       getCardsOwned();
     }
     // eslint-disable-next-line

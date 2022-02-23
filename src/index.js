@@ -4,8 +4,7 @@ import './index.css';
 import bg_blur from './resources/img/bg_blur.png'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from '@web3-ui/components';
-import { extendTheme } from "@chakra-ui/react"
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 
 const customTheme = extendTheme({
   fonts: {
@@ -40,9 +39,9 @@ const customTheme = extendTheme({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider theme={customTheme}>
+    <ChakraProvider theme={customTheme}>
       <App />
-    </Provider>
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('stakeborg-badges')
 );
