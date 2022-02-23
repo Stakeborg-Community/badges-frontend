@@ -1,6 +1,6 @@
 {
   "name": "stakeborg-badges-frontend",
-  "homepage": "https://stakeborgdao.xyz/wp-content/plugins/stakeborg-badges-frontend/",
+  "homepage": "https://stakeborgdao.xyz/wp-content/plugins/stakeborg-badges-frontend/build",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
