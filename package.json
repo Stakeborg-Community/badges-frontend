@@ -1,6 +1,6 @@
 {
   "name": "stakeborg-badges-frontend",
-  "homepage": ".",
+  "homepage": "./",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
