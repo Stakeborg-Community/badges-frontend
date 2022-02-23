@@ -1,7 +1,7 @@
 {
   "name": "badges-frontend",
-  "homepage": "https://stakeborg-community.github.io/badges-frontend",
-  "version": "0.1.0",
+  "homepage": "https://stakeborgdao.xyz/community-achievements/",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^1.1.5",
