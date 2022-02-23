@@ -62,6 +62,7 @@ export const NFT = (props: NFTProps) => {
         setErrorMessage('An unknown error occurred');
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export const NFT = (props: NFTProps) => {
     return () => {
       _isMounted.current = false;
     };
-  }, [props.ownedStatus, loading]);
+  }, [props, loading, fetchNFTData]);
 
   return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} loading={loading} setLoading={setLoading}/>;
 };

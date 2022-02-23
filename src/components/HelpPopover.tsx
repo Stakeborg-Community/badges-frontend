@@ -1,6 +1,5 @@
-import {Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverHeader, PopoverTrigger, PopoverContent, IconButton} from '@chakra-ui/react';
+import {Popover, PopoverArrow, PopoverBody, PopoverCloseButton, PopoverTrigger, PopoverContent, IconButton} from '@chakra-ui/react';
 import {QuestionIcon} from '@chakra-ui/icons'
-import React from 'react';
 
  
 export const HelpPopover = () => {
