@@ -1,4 +1,4 @@
-export default class Logger 
+class Logger 
 {
     constructor(enabled = false)
     {
@@ -15,3 +15,4 @@ export default class Logger
 
 export const dLogger = new Logger(false);
 export const eLogger = new Logger(true);
+export const logger = dLogger;

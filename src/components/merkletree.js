@@ -1,21 +1,21 @@
 import {MerkleTree} from "merkletreejs";
 import keccak256 from "keccak256";
 import whitelist from "../json/whitelist.json";
-import { dLogger } from "./logger.js";
+import { logger } from "./logger.js";
 export default class Merkle {
 
     constructor() {
         this.whitelist = whitelist;
         this.trees = [];
 
-        dLogger.groupCollapsed("Merkle root for all tokens:");
+        logger.groupCollapsed("Merkle root for all tokens:");
         for (let id in this.whitelist.tokenId)
         {
             const leaves = this.getLeaves(id);
             this.trees[id] = new MerkleTree(leaves, keccak256, {sortPairs: true});
-            dLogger.log(id, this.getRoot(id));
+            logger.log(id, this.getRoot(id));
         }
-        dLogger.groupEnd();      
+        logger.groupEnd();      
     }
 
     tokenWhitelist(tokenId) {

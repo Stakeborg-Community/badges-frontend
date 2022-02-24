@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
-import { dLogger } from "./logger.js";
+import { logger } from "./logger.js";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
 require("dotenv").config({ path: "../../.env"});
-dLogger.log(process.env)
+logger.log(process.env)
 const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
-dLogger.log(POLYGON_API_KEY)
+logger.log(POLYGON_API_KEY)
 
 export const CONTRACT_ADDRESS_V2 = "0x9c2F34E25f18e4109597572a4999f7EEa0a24F84";
 
@@ -13,10 +13,10 @@ export const CONTRACT_ADDRESS_V2 = "0x9c2F34E25f18e4109597572a4999f7EEa0a24F84";
 function handleEthereum() {
     const { ethereum } = window;
     if (ethereum && ethereum.isMetaMask) {
-        dLogger.log('Ethereum successfully detected!');
+        logger.log('Ethereum successfully detected!');
         // Access the decentralized web!
     } else {
-        dLogger.log('Please install MetaMask!');
+        logger.log('Please install MetaMask!');
     }
 }
 
@@ -51,7 +51,7 @@ export const checkIfWalletIsConnected = async (currentAccountSetter, connectedCo
         ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
         ethereum.on('chainChanged', (_chainId) => window.location.reload()); // reload page if chain changed
 
-        dLogger.log("Found authorized account:", account);
+        logger.log("Found authorized account:", account);
         await currentAccountSetter(account);
     }    
 }

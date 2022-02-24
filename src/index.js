@@ -5,7 +5,7 @@ import bg_blur from './resources/img/bg_blur.png'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
-import { dLogger } from "./components/logger.js";
+import { logger } from "./components/logger.js";
 
 const customTheme = extendTheme({
   fonts: {
@@ -49,7 +49,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    dLogger.log(error, errorInfo);
+    logger.log(error, errorInfo);
   }
 
   render() {
@@ -72,7 +72,7 @@ ReactDOM.render(
 );
 
 // If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(dLogger.log))
+// to log results (for example: reportWebVitals(logger.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
