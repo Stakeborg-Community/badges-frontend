@@ -284,7 +284,7 @@ function App() {
           <Center>
               <Text fontSize="sm" color="purple.300" isTruncated >
                 <Image w='5' src={polygonIcon} float='left'/> &nbsp;
-                <Link href={'https://mumbai.polygonscan.com/address/'+wallet.CONTRACT_ADDRESS_V2} isExternal>
+                <Link href={'https://polygonscan.com/address/'+wallet.CONTRACT_ADDRESS_V2} isExternal>
                   {wallet.CONTRACT_ADDRESS_V2}
                 </Link>
               </Text>
