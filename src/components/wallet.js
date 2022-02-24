@@ -1,20 +1,19 @@
 import { ethers } from "ethers";
+import detectEthereumProvider from '@metamask/detect-provider';
+import { logger } from "./logger.js";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
-require("dotenv").config({ path: "../../.env"});
-console.log(process.env)
-const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
-console.log(POLYGON_API_KEY)
-
 export const CONTRACT_ADDRESS_V2 = "0x9c2F34E25f18e4109597572a4999f7EEa0a24F84";
 
+
 export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
-    const {ethereum} = window;  
-    if (!ethereum) {
-        console.log("Make sure you have metamask");
-        return;
-    } else {
-        console.log("We have the ethereum object", ethereum);
-    }
+    const ethereum = await detectEthereumProvider();
+
+    if (ethereum) {
+        logger.log('Ethereum successfully detected!');
+      } else {
+        logger.log('Please install MetaMask!');
+      }
+    
     // Check if metamask is connected to Mumbai. Trigger network switch if not
     await switchNetwork();
 
@@ -31,7 +30,7 @@ export const checkIfWalletIsConnected = async (currentAccountSetter, connectedCo
         ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
         ethereum.on('chainChanged', (_chainId) => window.location.reload()); // reload page if chain changed
 
-        console.log("Found authorized account:", account);
+        logger.log("Found authorized account:", account);
         await currentAccountSetter(account);
     }    
 }

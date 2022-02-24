@@ -22,6 +22,7 @@ import metamaskIcon from "./resources/img/metamask.svg"
 import polygonIcon from "./resources/img/polygon.svg"
 import githubIcon from "./resources/img/github.svg"
 import tokens from "./json/tokens.json";
+import { logger } from "./components/logger.js";
 
 function App() {
 /* Lesson learned the hard way: Change state variables only using their set function */
@@ -70,7 +71,7 @@ function App() {
   
 
   const mint = async (tokenId, setLoading) => {
-    console.log("trying to mint: ", tokenId); 
+    logger.log("trying to mint: ", tokenId); 
     await checkWalletConnection();
     let nftTx;
     let tx;
@@ -98,7 +99,7 @@ function App() {
           alert("You are trying to mint a non-existent token.");
       }
       
-			console.log('Minting....', nftTx.hash);
+			logger.log('Minting....', nftTx.hash);
       setLoading(true);
     } catch (error) {
       alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
@@ -108,10 +109,10 @@ function App() {
 
     try{    
       tx = await nftTx.wait();
-      console.log('Minted!', tx);  
+      logger.log('Minted!', tx);  
       
     } catch (error) {
-      console.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
+      logger.error(`Failed to mint token ${tokenId} for address ${currentAccount}`);
       alert((error.data ? error.data.message : null) ?? error.message ?? "Unsupported error");
     }
     finally {
@@ -136,10 +137,11 @@ function App() {
       }
       collection.push(<Heading as='h4' size="lg" mt='30px' mb='2' textAlign='left' color='white' isTruncated key={"collection_name_"+key}>{key}</Heading>)      
       collection.push(<SimpleGrid key={"collection_"+key} minChildWidth='120px' spacing='100px'>{cardsArray}</SimpleGrid>)
+      setCards(collection);
     }
     
-    console.log("Create nft arrays");
-    console.log(collection);
+    logger.log("Create nft arrays");
+    logger.log(collection);
     setCards(collection);
   }
 
@@ -147,10 +149,10 @@ function App() {
   
 
   const getCardsOwned = async () => {
-    console.groupCollapsed('Contract instance');
-    console.log(connectedContract);
-    console.groupEnd();
-    console.groupCollapsed('Owned tokens');
+    logger.groupCollapsed('Contract instance');
+    logger.log(connectedContract);
+    logger.groupEnd();
+    logger.groupCollapsed('Owned tokens');
 
 
     // Do batch balance checking for each collection to be displayed
@@ -161,15 +163,15 @@ function App() {
       try {
         let reqAccounts = Array(TOKEN_IDS.length).fill(currentAccount)
         copies[name] = await connectedContract.balanceOfBatch(reqAccounts, TOKEN_IDS)
-        console.log(copies)
+        logger.log(copies)
         if (baseUri === null) {
           let tokenURI = await connectedContract.uri(0)
           setBaseUri(tokenURI.replace(/{id}.json/, ""))  // extract baseUrl: from "ipfs.com/CID/1.json"  to  "ipfs.com/CID/"
         }
       } catch (error) {
-        console.error(`Failed to get balance of tokens for address ${currentAccount}.`);
-        console.error(error);
-        console.groupEnd();
+        logger.error(`Failed to get balance of tokens for address ${currentAccount}.`);
+        logger.error(error);
+        logger.groupEnd();
         return;
       }
     }
@@ -202,7 +204,7 @@ function App() {
         ownedstatus[name].push(status)
       }
     }
-    console.groupEnd();  
+    logger.groupEnd();  
     setCardsOwnedStatus(ownedstatus);    
   }    
 
