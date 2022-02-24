@@ -137,6 +137,7 @@ function App() {
       }
       collection.push(<Heading as='h4' size="lg" mt='30px' mb='2' textAlign='left' color='white' isTruncated key={"collection_name_"+key}>{key}</Heading>)      
       collection.push(<SimpleGrid key={"collection_"+key} minChildWidth='120px' spacing='100px'>{cardsArray}</SimpleGrid>)
+      setCards(collection);
     }
     
     logger.log("Create nft arrays");

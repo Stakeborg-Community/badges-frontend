@@ -1,40 +1,19 @@
 import { ethers } from "ethers";
+import detectEthereumProvider from '@metamask/detect-provider';
 import { logger } from "./logger.js";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
-require("dotenv").config({ path: "../../.env"});
-logger.log(process.env)
-const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
-logger.log(POLYGON_API_KEY)
-
 export const CONTRACT_ADDRESS_V2 = "0x9c2F34E25f18e4109597572a4999f7EEa0a24F84";
 
 
-  
-function handleEthereum() {
-    const { ethereum } = window;
-    if (ethereum && ethereum.isMetaMask) {
-        logger.log('Ethereum successfully detected!');
-        // Access the decentralized web!
-    } else {
-        logger.log('Please install MetaMask!');
-    }
-}
-
-
 export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
-    if (window.ethereum) {
-        handleEthereum();
-      } else {
-        window.addEventListener('ethereum#initialized', handleEthereum, {
-          once: true,
-        });
-      
-        // If the event is not dispatched by the end of the timeout,
-        // the user probably doesn't have MetaMask installed.
-        setTimeout(handleEthereum, 3000); // 3 seconds
-      }
+    const ethereum = await detectEthereumProvider();
 
-    const { ethereum } = window;
+    if (ethereum) {
+        logger.log('Ethereum successfully detected!');
+      } else {
+        logger.log('Please install MetaMask!');
+      }
+    
     // Check if metamask is connected to Mumbai. Trigger network switch if not
     await switchNetwork();
 
