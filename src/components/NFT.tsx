@@ -1,4 +1,4 @@
-
+import { dLogger } from "./logger.js";
 import React, { useCallback, useEffect, useRef } from 'react';
 import { NFTCard, NFTData } from './NFTCard';
 const axios = require('axios');
@@ -66,7 +66,7 @@ export const NFT = (props: NFTProps) => {
   }, []);
 
   useEffect(() => {
-    console.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
+    dLogger.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {

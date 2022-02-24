@@ -1,20 +1,40 @@
 import { ethers } from "ethers";
+import { dLogger } from "./logger.js";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
 require("dotenv").config({ path: "../../.env"});
-console.log(process.env)
+dLogger.log(process.env)
 const POLYGON_API_KEY = process.env.POLYGON_API_KEY;
-console.log(POLYGON_API_KEY)
+dLogger.log(POLYGON_API_KEY)
 
 export const CONTRACT_ADDRESS_V2 = "0x9c2F34E25f18e4109597572a4999f7EEa0a24F84";
 
-export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
-    const {ethereum} = window;  
-    if (!ethereum) {
-        console.log("Make sure you have metamask");
-        return;
+
+  
+function handleEthereum() {
+    const { ethereum } = window;
+    if (ethereum && ethereum.isMetaMask) {
+        dLogger.log('Ethereum successfully detected!');
+        // Access the decentralized web!
     } else {
-        console.log("We have the ethereum object", ethereum);
+        dLogger.log('Please install MetaMask!');
     }
+}
+
+
+export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
+    if (window.ethereum) {
+        handleEthereum();
+      } else {
+        window.addEventListener('ethereum#initialized', handleEthereum, {
+          once: true,
+        });
+      
+        // If the event is not dispatched by the end of the timeout,
+        // the user probably doesn't have MetaMask installed.
+        setTimeout(handleEthereum, 3000); // 3 seconds
+      }
+
+    const { ethereum } = window;
     // Check if metamask is connected to Mumbai. Trigger network switch if not
     await switchNetwork();
 
@@ -31,7 +51,7 @@ export const checkIfWalletIsConnected = async (currentAccountSetter, connectedCo
         ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
         ethereum.on('chainChanged', (_chainId) => window.location.reload()); // reload page if chain changed
 
-        console.log("Found authorized account:", account);
+        dLogger.log("Found authorized account:", account);
         await currentAccountSetter(account);
     }    
 }
