@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/badges-frontend/static/css/main.3717280b.chunk.css",
-    "main.js": "/badges-frontend/static/js/main.1fc55bd1.chunk.js",
-    "main.js.map": "/badges-frontend/static/js/main.1fc55bd1.chunk.js.map",
-    "runtime-main.js": "/badges-frontend/static/js/runtime-main.f1a5e854.js",
-    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.f1a5e854.js.map",
-    "static/js/2.233ace95.chunk.js": "/badges-frontend/static/js/2.233ace95.chunk.js",
-    "static/js/2.233ace95.chunk.js.map": "/badges-frontend/static/js/2.233ace95.chunk.js.map",
-    "static/js/3.43277910.chunk.js": "/badges-frontend/static/js/3.43277910.chunk.js",
-    "static/js/3.43277910.chunk.js.map": "/badges-frontend/static/js/3.43277910.chunk.js.map",
+    "main.js": "/badges-frontend/static/js/main.b0ec6fd1.chunk.js",
+    "main.js.map": "/badges-frontend/static/js/main.b0ec6fd1.chunk.js.map",
+    "runtime-main.js": "/badges-frontend/static/js/runtime-main.0a86dadc.js",
+    "runtime-main.js.map": "/badges-frontend/static/js/runtime-main.0a86dadc.js.map",
+    "static/js/2.34f38c70.chunk.js": "/badges-frontend/static/js/2.34f38c70.chunk.js",
+    "static/js/2.34f38c70.chunk.js.map": "/badges-frontend/static/js/2.34f38c70.chunk.js.map",
+    "static/js/3.ca039141.chunk.js": "/badges-frontend/static/js/3.ca039141.chunk.js",
+    "static/js/3.ca039141.chunk.js.map": "/badges-frontend/static/js/3.ca039141.chunk.js.map",
     "index.html": "/badges-frontend/index.html",
     "static/css/main.3717280b.chunk.css.map": "/badges-frontend/static/css/main.3717280b.chunk.css.map",
-    "static/js/2.233ace95.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.233ace95.chunk.js.LICENSE.txt",
+    "static/js/2.34f38c70.chunk.js.LICENSE.txt": "/badges-frontend/static/js/2.34f38c70.chunk.js.LICENSE.txt",
     "static/media/Brochure2.946fbb7d.pdf": "/badges-frontend/static/media/Brochure2.946fbb7d.pdf",
     "static/media/index.css": "/badges-frontend/static/media/FuturaLTProHeavy.8f9e6e63.ttf",
     "static/media/MVP_EN.c3d84cc9.pdf": "/badges-frontend/static/media/MVP_EN.c3d84cc9.pdf",
@@ -22,9 +22,9 @@
     "static/media/polygon.fb5b773c.svg": "/badges-frontend/static/media/polygon.fb5b773c.svg"
   },
   "entrypoints": [
-    "static/js/runtime-main.f1a5e854.js",
-    "static/js/2.233ace95.chunk.js",
+    "static/js/runtime-main.0a86dadc.js",
+    "static/js/2.34f38c70.chunk.js",
     "static/css/main.3717280b.chunk.css",
-    "static/js/main.1fc55bd1.chunk.js"
+    "static/js/main.b0ec6fd1.chunk.js"
   ]
 }
