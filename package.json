@@ -1,6 +1,6 @@
 {
   "name": "badges-frontend",
-  "homepage": "https://stakeborg-community.github.io/badges-frontend/",
+  "homepage": "/wp-content/plugins/stakeborg-badges-frontend/build",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
