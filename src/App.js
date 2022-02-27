@@ -9,7 +9,7 @@ import {
 import { Container, SimpleGrid,AspectRatio, Box, Button, Heading, Flex, Spacer, Stack, Link, Text, Image, Center, IconButton } from '@chakra-ui/react';
 import { InfoIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 import { NFT } from "./components/NFT.tsx";
-import { HelpPopover } from './components/HelpPopover';
+import { HelpPopover } from './components/HelpPopover.tsx';
 import { Address } from "@web3-ui/components";
 import * as NFTOwnershipStatus from "./enums/NFTOwnershipStatus";
 import * as wallet from "./components/wallet.js";
