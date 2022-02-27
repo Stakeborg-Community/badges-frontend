@@ -1,6 +1,7 @@
 import { logger } from "./logger.js";
 import React, { useCallback, useEffect, useRef } from 'react';
-import { NFTCard, NFTData } from './NFTCard';
+// @ts-ignore
+import { NFTCard, NFTData } from './NFTCard.tsx';
 const axios = require('axios');
 
 export interface NFTProps {

@@ -32,7 +32,8 @@ import {
   useDisclosure 
 } from '@chakra-ui/react'
 import { useState } from "react";
-import { PlaceholderNFT } from "./PlaceholdeNFT";
+// @ts-ignore
+import { PlaceholderNFT } from "./PlaceholdeNFT.tsx";
 
 
 export interface NFTData {
