@@ -13,6 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Plugin extends Singleton {
 
+	private $badges = array(
+		1 => 'Bootstrapper',
+		2 => 'Veteran',
+		3 => 'Early Adopter',
+		4 => 'Sustainer',
+		5 => 'Believer',
+	);
+
+	private $external_connection = null;
+
 	/**
 	 * Plugin constructor
 	 *
@@ -29,6 +39,8 @@ class Plugin extends Singleton {
 		// Enable application passwords for api.
 		add_filter( 'wp_is_application_passwords_available', '__return_true', 9999 );
 
+		add_filter( 'bp_get_member_avatar', array( $this, 'nft_on_bp_members_list' ) );
+		add_action( 'bp_before_member_header_meta', array( $this, 'nft_on_bp_member_page' ) );
 	}
 
 	public function init_actions() {
@@ -60,6 +72,91 @@ class Plugin extends Singleton {
 				},
 			)
 		);
+	}
+
+	private function get_nft_type_for_user( $user_id ) {
+
+		$address = xprofile_get_field_data( 'ERC20 Address', $user_id );
+
+		if ( ! $address ) {
+			return false;
+		}
+
+		$externaldb = $this->external_db();
+
+		$data = $externaldb->get_row(
+			$externaldb->prepare(
+				'SELECT nft_type FROM transfer WHERE address=%s',
+				$address
+			)
+		);
+
+		if ( is_object( $data ) ) {
+			return $data->nft_type;
+		}
+
+		return false;
+	}
+
+	public function nft_on_bp_member_page() {
+		$user_id  = bp_displayed_user_id();
+		$badge_id = $this->get_nft_type_for_user( $user_id );
+
+		if ( ! $badge_id ) {
+			return;
+		}
+
+		echo $this->get_badge_html( $badge_id );
+	}
+
+	public function nft_on_bp_members_list( $avatar ) {
+
+		global $members_template;
+
+		if ( empty( $members_template->member->id ) ) {
+			return $avatar;
+		}
+
+		$user_id  = $members_template->member->id;
+		$badge_id = $this->get_nft_type_for_user( $user_id );
+		if ( ! $badge_id ) {
+			return $avatar;
+		}
+
+		$details = $this->get_badge_html( $badge_id );
+
+		if ( empty( trim( $details ) ) ) {
+			return $avatar;
+		}
+
+		return $avatar . '</a>' . $details . '<a>';
+
+	}
+
+	public function get_badge_html( $badge_id ) {
+		ob_start();
+		?>
+		<div class="gamipress-buddypress-user-details gamipress-buddypress-user-details-listing">
+			<div class="gamipress-buddypress-achievements">
+				<div class="gamipress-buddypress-user-achievements">
+					<span class="gamipress-buddypress-achievement gamipress-buddypress-badges">
+						<span title="<?php echo esc_attr( $this->badges[ $badge_id ] ); ?>" 
+							class="activity gamipress-buddypress-achievement-thumbnail gamipress-buddypress-badges-thumbnail"
+							style="box-shadow: none;"	
+						>
+							<img width="25" height="25" src="<?php echo esc_url( SBORG_BADGES_URL . 'assets/img/' . $badge_id . '.png' ); ?>" class="gamipress-achievement-thumbnail wp-post-image" 
+								alt="<?php echo esc_attr( $this->badges[ $badge_id ] ); ?>">
+						</span>
+
+						<span class="activity gamipress-buddypress-achievement-title gamipress-buddypress-badges-title">
+							<?php echo esc_attr( $this->badges[ $badge_id ] ); ?>
+						</span>
+					</span>	
+				</div>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 
 	public function get_users_data() {
@@ -159,5 +256,13 @@ class Plugin extends Singleton {
 		$data = '<div id="stakeborg-badges"></div>';
 
 		return $data;
+	}
+
+	private function external_db() {
+		if ( empty( $this->external_connection ) ) {
+			$this->external_connection = new \wpdb( 'eth_db_stakeborg', 'dMnagM@dTIybNR%p+K1}063teYLH958l', 'eth_db_stakeborg', 'localhost' );
+		}
+
+		return $this->external_connection;
 	}
 }
