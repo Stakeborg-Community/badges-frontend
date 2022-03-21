@@ -14,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Plugin extends Singleton {
 
 	private $badges = array(
-		1 => 'Bootstrapper',
-		2 => 'Veteran',
-		3 => 'Early Adopter',
-		4 => 'Sustainer',
-		5 => 'Believer',
+		0 => 'Bootstrapper',
+		1 => 'Veteran',
+		2 => 'Early Adopter',
+		3 => 'Sustainer',
+		4 => 'Believer',
 	);
 
 	private $external_connection = null;
