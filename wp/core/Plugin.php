@@ -260,7 +260,7 @@ class Plugin extends Singleton {
 
 	private function external_db() {
 		if ( empty( $this->external_connection ) ) {
-			$this->external_connection = new \wpdb( 'eth_db_stakeborg', 'dMnagM@dTIybNR%p+K1}063teYLH958l', 'eth_db_stakeborg', 'localhost' );
+			$this->external_connection = new \wpdb( STK_EXT_DB_USER, STK_EXT_DB_PASS, STK_DB_EXT_DB_NAME, 'localhost' );
 		}
 
 		return $this->external_connection;
