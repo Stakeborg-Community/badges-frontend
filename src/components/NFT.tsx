@@ -1,6 +1,7 @@
-
+import { logger } from "./logger.js";
 import React, { useCallback, useEffect, useRef } from 'react';
-import { NFTCard, NFTData } from './NFTCard';
+// @ts-ignore
+import { NFTCard, NFTData } from './NFTCard.tsx';
 const axios = require('axios');
 
 export interface NFTProps {
@@ -62,16 +63,17 @@ export const NFT = (props: NFTProps) => {
         setErrorMessage('An unknown error occurred');
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    console.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
+    logger.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
       _isMounted.current = false;
     };
-  }, [props.ownedStatus, loading]);
+  }, [props, loading, fetchNFTData]);
 
   return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} loading={loading} setLoading={setLoading}/>;
 };

@@ -4,9 +4,8 @@ import './index.css';
 import bg_blur from './resources/img/bg_blur.png'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react'
-import { Provider } from '@web3-ui/components';
-import { extendTheme } from "@chakra-ui/react"
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import { logger } from "./components/logger.js";
 
 const customTheme = extendTheme({
   fonts: {
@@ -38,17 +37,42 @@ const customTheme = extendTheme({
   },
 })
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    logger.log(error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children; 
+  }
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider theme={customTheme}>
-      <App />
-    </Provider>
+    <ChakraProvider theme={customTheme}>
+      <ErrorBoundary><App /></ErrorBoundary>      
+    </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('stakeborg-badges')
 );
 
 // If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
+// to log results (for example: reportWebVitals(logger.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
