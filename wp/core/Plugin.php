@@ -102,10 +102,20 @@ class Plugin extends Singleton {
 
 	}
 
+	/**
+	 * Show badges title on profile - achievements page
+	 *
+	 * @return void
+	 */
 	public function achievements_tab_title() {
 		echo esc_html__( 'Achievements' );
 	}
 
+	/**
+	 * Show badges content on profile - achievements page
+	 *
+	 * @return void
+	 */
 	public function achievements_tab_content() {
 
 		$user_id = bp_displayed_user_id();
@@ -118,18 +128,20 @@ class Plugin extends Singleton {
 		}
 		?>
 		<div class="badges-tab-wrapper">
-			<img
-				src="<?php echo esc_url( SBORG_BADGES_URL . 'assets/img/' . $badge_id . '.png' ); ?>" 
-				class="badges-tab-image" 
-				alt="<?php echo esc_attr( $this->badges[ $badge_id ] ); ?>">
+			<div class="badges-tab-item">
+				<img
+					src="<?php echo esc_url( SBORG_BADGES_URL . 'assets/img/' . $badge_id . '.png' ); ?>" 
+					class="badges-tab-image" 
+					alt="<?php echo esc_attr( $this->badges[ $badge_id ] ); ?>">
+			</div>
 		</div>
 		<style>
 			.badges-tab-wrapper {
 				max-width: 1200px;
-				padding: 0 20px;
+
 				width: 100%; 
 				display: grid;
-				grid-auto-rows: 100px; 
+				grid-auto-rows: 300px; 
 				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
 				grid-gap: 1em;
 			}
@@ -138,6 +150,11 @@ class Plugin extends Singleton {
 
 	}
 
+	/**
+	 * Register Rest Route to fetch user data
+	 *
+	 * @return void
+	 */
 	public function add_users_api_route() {
 		register_rest_route(
 			'badges/v1',
@@ -152,6 +169,12 @@ class Plugin extends Singleton {
 		);
 	}
 
+	/**
+	 * Get the NFT ID from the database
+	 *
+	 * @param int $user_id User ID.
+	 * @return int
+	 */
 	private function get_nft_type_for_user( $user_id ) {
 
 		$address = xprofile_get_field_data( 'ERC20 Address', $user_id );
