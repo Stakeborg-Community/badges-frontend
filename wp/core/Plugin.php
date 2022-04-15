@@ -191,8 +191,8 @@ class Plugin extends Singleton {
 
 		$data = $externaldb->get_row(
 			$externaldb->prepare(
-				'SELECT nft_type FROM transfer WHERE address=%s',
-				$address
+				'SELECT nft_type FROM transfer WHERE address=%s or ens=%s',
+				$address, $address
 			)
 		);
 
