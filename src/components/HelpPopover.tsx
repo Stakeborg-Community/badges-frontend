@@ -17,7 +17,7 @@ export const HelpPopover = () => {
           <PopoverBody>
             If you encounter any issues, do not hesitate to contact any of the following people:
             <br/>
-            Bogdan I#7371
+            Bogdani#7371
             <br/>
             andreiv#4775
             <br/>
