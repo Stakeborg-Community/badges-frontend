@@ -283,6 +283,13 @@ function App() {
 
       <Container as="footer" role="contentinfo" pt={{ base: '12', md: '15vh' }}>
         <Stack spacing={{ base: '4', md: '2' }}>
+          
+          <Center>
+              <Text fontSize="sm" isTruncated >
+                <Image w='5' src={githubIcon} float='left'/> &nbsp;
+                <Link href='https://github.com/Stakeborg-Community/badges-frontend' isExternal> Badges Frontend </Link>
+              </Text>
+          </Center>
           <Center>
               <Text fontSize="sm" color="purple.300" isTruncated >
                 <Image w='5' src={polygonIcon} float='left'/> &nbsp;
@@ -290,14 +297,7 @@ function App() {
                   {wallet.CONTRACT_ADDRESS_V2}
                 </Link>
               </Text>
-          </Center>
-          <Center>
-              <Text fontSize="sm" isTruncated >
-                <Image w='5' src={githubIcon} float='left'/> &nbsp;
-                <Link href='https://github.com/Stakeborg-Community/badges-frontend' isExternal> Badges Frontend </Link>
-              </Text>
-          </Center>
-              
+          </Center>  
           <Text fontSize="sm" color="subtle" isTruncated>
             &copy; {new Date().getFullYear()} Stakeborg DAO - Bring Web3.
           </Text>
