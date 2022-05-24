@@ -1,7 +1,10 @@
-
+import { logger } from "./logger.js";
 import React, { useCallback, useEffect, useRef } from 'react';
-import { NFTCard, NFTData } from './NFTCard';
+// @ts-ignore
+import { NFTCard, NFTData } from './NFTCard.tsx';
 const axios = require('axios');
+const rateLimit = require('axios-rate-limit');
+const http = rateLimit(axios.create(), { maxRequests: 3, perMilliseconds: 1000, maxRPS: 3 })
 
 export interface NFTProps {
   /**
@@ -38,7 +41,7 @@ export const NFT = (props: NFTProps) => {
     try {
       
       //const res = await fetch();
-      let res = await axios.get(props.baseUri + props.tokenId + ".json")
+      let res = await http.get(props.baseUri + props.tokenId + ".json")
       if (res.status !== 200) {
         throw Error(
           `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
@@ -66,7 +69,7 @@ export const NFT = (props: NFTProps) => {
   }, []);
 
   useEffect(() => {
-    console.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
+    logger.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
