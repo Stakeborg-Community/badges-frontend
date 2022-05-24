@@ -1,21 +1,10 @@
-import "./NFT.css";
-import * as NFTOwnershipStatus from "../enums/NFTOwnershipStatus.js";
+import { logger } from "./logger.js";
 import React, { useCallback, useEffect, useRef } from 'react';
-import {
-  Button,
-  Box,
-  Image,
-  Alert,
-  AlertIcon,
-} from '@chakra-ui/react';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  useDisclosure 
-} from '@chakra-ui/react'
-
+// @ts-ignore
+import { NFTCard, NFTData } from './NFTCard.tsx';
+const axios = require('axios');
+const rateLimit = require('axios-rate-limit');
+const http = rateLimit(axios.create(), { maxRequests: 3, perMilliseconds: 1000, maxRPS: 3 })
 
 export interface NFTProps {
   /**
@@ -34,16 +23,10 @@ export interface NFTProps {
    * The function to call upon minting
    */
   mintingFn: Function;
-}
-
-export interface NFTData {
-  tokenId: string;
-  image_svg?: string;
-  image_lg?: string;
-  image_sm?: string;
-  name: string | null;
-  description: string;
-  ownedStatus: Symbol;
+  /**
+   * The base uri to get token info
+   */
+  baseUri: string;
 }
 
 /**
@@ -57,21 +40,20 @@ export const NFT = (props: NFTProps) => {
   const fetchNFTData = useCallback(async () => {
     try {
       
-      const res = await fetch("https://ipfs.io/ipfs/Qmc2qn27xNCv4RbTw5kpgA1tbogaZ5QY6MLf5uyMDUZTWW/" + props.tokenId + ".json");
-          
-      if (!res.ok) {
+      //const res = await fetch();
+      let res = await http.get(props.baseUri + props.tokenId + ".json")
+      if (res.status !== 200) {
         throw Error(
           `Request failed with status: ${res.status}. Make sure the ipfs url is correct.`
         );
       }
-      const data = await res.json();
+      const data = await res.data;
       if (_isMounted.current) {
         setNftData({
           tokenId: props.tokenId,
-          image_svg:  data['image_svg'],
-          image_lg: data['image_lg'],
-          image_sm: data['image_sm'],
+          image: data.image,
           name: data.name,
+          attributes: data.attributes,
           description: data.description,
           ownedStatus: props.ownedStatus
         });
@@ -83,94 +65,17 @@ export const NFT = (props: NFTProps) => {
         setErrorMessage('An unknown error occurred');
       }
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    console.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
+    logger.log(`Update on NFT ${props.tokenId} triggered. Owned status changed to ${props.ownedStatus.description}`);
     _isMounted.current = true;
     fetchNFTData();
     return () => {
       _isMounted.current = false;
     };
-  }, [props.ownedStatus, loading]);
+  }, [props, loading, fetchNFTData]);
 
   return <NFTCard data={nftData} errorMessage={errorMessage} size={props.size} mintingFn={props.mintingFn} loading={loading} setLoading={setLoading}/>;
-};
-
-/**
- * Private component to display an NFT given the data
- */
-export const NFTCard = ({
-  data,
-  errorMessage = '',
-  size = 'lg',
-  mintingFn,
-  loading,
-  setLoading
-}: {
-  data: NFTData | undefined | null;
-  errorMessage?: string | undefined;
-  size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined;
-  mintingFn: Function;
-  loading: boolean;
-  setLoading: Function;
-}) => {
-  const name = data?.name;
-  const description = data?.description;
-  const ownedStatus = data?.ownedStatus;
-  const tokenId = data?.tokenId;
-  const displayName = name;
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const mint = () =>
-  {
-    mintingFn(tokenId, setLoading);
-  }
-
-
-  if (errorMessage) {
-    return (
-      <Alert status="error">
-        <AlertIcon />
-        {errorMessage}
-      </Alert>
-    );
-  }
-
-  let commonImageClasses = ownedStatus?.description;
-  let button;
-  if (ownedStatus !== NFTOwnershipStatus.Owned && tokenId != '69420')
-  {
-    button = <Button color='white' className="nftButton" boxShadow='md' backgroundColor='#0c8af2' variant='solid'  loadingText='Minting...'  onClick={mint} isLoading={loading} isDisabled={ownedStatus === NFTOwnershipStatus.NonMintable}>
-              Mint
-            </Button>;
-  }
-  const image = <Image className={commonImageClasses  + ' hoverglow'}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
-  const imageModal = <Image className={commonImageClasses}  src={data?.image_lg} borderRadius="2xl" w={size} loading="lazy" />;
-
-
-
-
-  const modal = <Modal isOpen={isOpen} onClose={onClose} size={size} isCentered motionPreset="scale" allowPinchZoom>
-        <ModalOverlay/>
-        <ModalContent>
-          <ModalBody>
-            {imageModal}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-  return (
-      <Box maxW={size} borderRadius='lg' >
-        
-        <a href="#" onClick={onOpen}>
-          {imageModal}
-          {modal}
-        </a>
-
-        {button}
-        
-      </Box>
-
-  );
 };

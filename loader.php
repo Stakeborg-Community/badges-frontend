@@ -1,10 +1,11 @@
 <?php
 /**
  * Plugin Name: StakeborgDao.xyz NFT Badges
- * Version: 1.0.0
+ * Version: 2.0.0
  */
 
-define( 'SBORG_BADGES_VERSION', '1.0.0' );
+define( 'SBORG_BADGES_VERSION', '2.0.0' );
+
 define( 'SBORG_BADGES_ASSETS_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
 define( 'SBORG_BADGES_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) . 'wp/' );
 define( 'SBORG_BADGES_PATH', trailingslashit( plugin_dir_path( __FILE__ ) ) . 'wp/' );
