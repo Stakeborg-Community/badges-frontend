@@ -1,18 +1,21 @@
 import { ethers } from "ethers";
+import detectEthereumProvider from '@metamask/detect-provider';
+import { logger } from "./logger.js";
 import SeniorityBadgev2 from "../json/SeniorityBadge-v2.json";
+export const CONTRACT_ADDRESS_V2 = "0x9c2F34E25f18e4109597572a4999f7EEa0a24F84";
 
-const CONTRACT_ADDRESS_V2 = "0x97E4743723570De6aEEd04560DB765CAAc8FD12F";
 
 export const checkIfWalletIsConnected = async (currentAccountSetter, connectedContractSetter) => {
-    const {ethereum} = window;  
-    if (!ethereum) {
-        console.log("Make sure you have metamask");
-        return;
-    } else {
-        console.log("We have the ethereum object", ethereum);
-    }
+    const ethereum = await detectEthereumProvider();
+
+    if (ethereum) {
+        logger.log('Ethereum successfully detected!');
+      } else {
+        logger.log('Please install MetaMask!');
+      }
+    
     // Check if metamask is connected to Mumbai. Trigger network switch if not
-    await switchNetworkMumbai();
+    await switchNetwork();
 
     // Connect to contract
     const provider = new ethers.providers.Web3Provider(ethereum);
@@ -24,18 +27,19 @@ export const checkIfWalletIsConnected = async (currentAccountSetter, connectedCo
 
     if (accounts.length !== 0) {
         const account = accounts[0];
-        console.log("Found authorized account:", account);
-        await currentAccountSetter(account);
-    }
+        ethereum.on("accountsChanged", () => { window.location.reload() }); // reload page if account changes
+        ethereum.on('chainChanged', (_chainId) => window.location.reload()); // reload page if chain changed
 
-    
+        logger.log("Found authorized account:", account);
+        await currentAccountSetter(account);
+    }    
 }
 
-const switchNetworkMumbai = async () => {
+const switchNetwork = async () => {
     try {
         await window.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: "0x13881" }],
+        params: [{ chainId: "0x89" }],
         });
     } catch (error) {
         if (error.code === 4902) {
@@ -44,15 +48,15 @@ const switchNetworkMumbai = async () => {
             method: "wallet_addEthereumChain",
             params: [
                 {
-                chainId: "0x13881",
-                chainName: "Mumbai",
-                rpcUrls: ["https://matic-mumbai.chainstacklabs.com"],
+                chainId: "0x89",
+                chainName: "Polygon Mainnet",
+                rpcUrls: [`https://polygon-mainnet.g.alchemy.com/v2/P2_1kHV1lvnksl-qhxEEBG8dZShoRmG1`],
                 nativeCurrency: {
                     name: "Matic",
-                    symbol: "Matic",
+                    symbol: "MATIC",
                     decimals: 18,
                 },
-                blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"],
+                blockExplorerUrls: ["https://polygonscan.com/"],
                 },
             ],
             });
