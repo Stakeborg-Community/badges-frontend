@@ -32,6 +32,8 @@ import {
   useDisclosure 
 } from '@chakra-ui/react'
 import { useState } from "react";
+// @ts-ignore
+import { PlaceholderNFT } from "./PlaceholdeNFT.tsx";
 
 
 export interface NFTData {
@@ -85,7 +87,7 @@ export interface NFTData {
       );
     }
   
-    let commonImageClasses = ownedStatus?.description;
+    let commonImageClasses = ownedStatus?.description ?? "";
     let button;
 
     if (ownedStatus === NFTOwnershipStatus.Mintable)
@@ -95,11 +97,11 @@ export interface NFTData {
               </Button>;
     }
 
+    let palceholder = PlaceholderNFT(commonImageClasses, size);
 
-
-    const image = <Skeleton isLoaded={imageLoaded}><Image className={commonImageClasses + ' hoverglow'}  src={data?.image} onLoad={()=>setImageLoaded(true)} borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/></Skeleton>;
-    //const imageReflected = <Skeleton><Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/></Skeleton>;
-    const imageModal = <Skeleton isLoaded={imageLoaded}><Image  src={data?.image} px='10px' pb='5px' borderRadius="xl" w={size} loading="lazy" /></Skeleton>;
+    const image = <Image className={commonImageClasses + ' hoverglow'}  src={data?.image} fallback={palceholder} onLoad={()=>setImageLoaded(true)} borderRadius="xl" w={size} loading="lazy" boxShadow='2xl'/>;
+    //const imageReflected = <Skeleton><Image className={commonImageClasses  + ' reflection'}  src={data?.image} borderRadius="2xl" w={size} loading="lazy"/>;
+    const imageModal = <Image  src={data?.image} px='10px' pb='5px' borderRadius="xl" fallback={palceholder} w={size} loading="lazy" />;
   
   
   
@@ -163,6 +165,7 @@ export interface NFTData {
         </Modal>
   // eslint-disable-next-line
     return (
+      <Skeleton isLoaded={imageLoaded}>
         <Box maxW={size} borderRadius='lg' >
           
           <a href="#p" onClick={onOpen}>
@@ -173,7 +176,7 @@ export interface NFTData {
           {button}
           
         </Box>
-  
+        </Skeleton>
     );
   };
   

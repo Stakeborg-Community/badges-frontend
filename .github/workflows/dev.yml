@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Push code to dev
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the dev branch
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  CI: false
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_DEPLOY_PRIVATE_KEY }}
+          known_hosts: 'something'
+
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_DEPLOY_SERVER }} >> ~/.ssh/known_hosts
+
+      - name: Checkout
+        uses: actions/checkout@v2
+                
+      - name: Install
+        run: npm install
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Remove node_modules
+        run: rm -R node_modules/ && rm -R src/ && rm -R public
+        
+      - name: Deploy files
+        run: |
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_old"
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "mkdir -p ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_tmp"
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf $${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_tmp/*"
+          scp -p22 -r ./* ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }}:${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_tmp
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "mv ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}stakeborg-badges-frontend ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_old/ && mv ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_tmp/ ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}stakeborg-badges-frontend"
+          ssh -p22 ${{ secrets.SSH_DEPLOY_USER }}@${{ secrets.SSH_DEPLOY_SERVER }} "rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_tmp && rm -rf ${{ secrets.SSH_DEPLOY_REMOTE_STAGING_PATH }}_old"
